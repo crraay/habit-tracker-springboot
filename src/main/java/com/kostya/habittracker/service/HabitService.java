@@ -2,7 +2,6 @@ package com.kostya.habittracker.service;
 
 import java.util.List;
 
-import com.kostya.habittracker.entity.Habit;
 import com.kostya.habittracker.model.HabitRequest;
 import com.kostya.habittracker.model.HabitResponse;
 

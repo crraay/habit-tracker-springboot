@@ -2,7 +2,6 @@ package com.kostya.habittracker.model;
 
 import com.kostya.habittracker.entity.Habit;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
