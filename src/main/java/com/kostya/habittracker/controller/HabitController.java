@@ -15,9 +15,11 @@ import com.kostya.habittracker.model.HabitRequest;
 import com.kostya.habittracker.model.HabitResponse;
 import com.kostya.habittracker.service.HabitService;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.websocket.server.PathParam;
 
 @RestController
+@Tag(name = "habit")
 @RequestMapping("/api/habit")
 public class HabitController {
 	
@@ -29,7 +31,7 @@ public class HabitController {
 		return this.habitService.getHabits();
 	}
 	
-	@GetMapping("{id}")
+	@GetMapping("/{id}")
 	HabitResponse getHabit(@PathParam(value="id") Integer id) {
 		return this.habitService.getHabit(id);
 	}
@@ -39,12 +41,12 @@ public class HabitController {
 		return this.habitService.createHabit(request);
 	}
 	
-	@PutMapping("{id}")
+	@PutMapping("/{id}")
 	HabitResponse updateHabit(@PathParam(value="id") Integer id, @RequestBody HabitRequest request) {
 		return this.habitService.updateHabit(id, request);
 	}
 	
-	@DeleteMapping("{id}")
+	@DeleteMapping("/{id}")
 	void deleteHabit(@PathParam(value="id") Integer id) {
 		this.habitService.deleteHabit(id);
 	}
