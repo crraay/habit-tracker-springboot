@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -16,10 +17,9 @@ import com.kostya.habittracker.model.HabitResponse;
 import com.kostya.habittracker.service.HabitService;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.websocket.server.PathParam;
 
 @RestController
-@Tag(name = "habit")
+@Tag(name = "habit-mgmt")
 @RequestMapping("/api/habit")
 public class HabitController {
 	
@@ -32,7 +32,7 @@ public class HabitController {
 	}
 	
 	@GetMapping("/{id}")
-	HabitResponse getHabit(@PathParam(value="id") Integer id) {
+	HabitResponse getHabit(@PathVariable("id") Integer id) {
 		return this.habitService.getHabit(id);
 	}
 	
@@ -42,12 +42,12 @@ public class HabitController {
 	}
 	
 	@PutMapping("/{id}")
-	HabitResponse updateHabit(@PathParam(value="id") Integer id, @RequestBody HabitRequest request) {
+	HabitResponse updateHabit(@PathVariable("id") Integer id, @RequestBody HabitRequest request) {
 		return this.habitService.updateHabit(id, request);
 	}
 	
 	@DeleteMapping("/{id}")
-	void deleteHabit(@PathParam(value="id") Integer id) {
+	void deleteHabit(@PathVariable("id") Integer id) {
 		this.habitService.deleteHabit(id);
 	}
 }
