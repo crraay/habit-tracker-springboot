@@ -10,6 +10,9 @@ import jakarta.persistence.UniqueConstraint;
 import lombok.Data;
 import java.time.LocalDate;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 @Data
 @Entity
 @Table(uniqueConstraints = {
@@ -22,6 +25,7 @@ public class HabitLog {
     Integer id;
     
     @ManyToOne
+    @OnDelete(action = OnDeleteAction.CASCADE)
     Habit habit;
     
     LocalDate date;
