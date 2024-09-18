@@ -4,9 +4,9 @@ import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.kostya.habittracker.config.PasswordEncoderComponent;
 import com.kostya.habittracker.entity.User;
 import com.kostya.habittracker.model.LoginRequest;
 import com.kostya.habittracker.model.LoginResponse;
@@ -22,7 +22,7 @@ public class AuthServiceImpl implements AuthService {
     private UserRepository userRepository;
 
     @Autowired
-    private BCryptPasswordEncoder passwordEncoder;
+    private PasswordEncoderComponent passwordEncoder;
 
     @Value("${jwt.secret}")
     private String SECRET_KEY;
