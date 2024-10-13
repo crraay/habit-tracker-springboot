@@ -1,14 +1,20 @@
 package com.kostya.habittracker.repository;
 
 import java.util.List;
+import java.util.Optional;
 
-import org.springframework.data.repository.CrudRepository;
-import org.springframework.stereotype.Repository;
+import org.springframework.data.repository.Repository;
 
 import com.kostya.habittracker.entity.Habit;
 
-@Repository
-public interface HabitRepository extends CrudRepository<Habit, Integer> {
+@org.springframework.stereotype.Repository
+public interface HabitRepository extends Repository<Habit, Integer> {
 
-	List<Habit> findAll();
+	Habit save(Habit habit);
+
+	void delete(Habit habit);
+
+	List<Habit> findAllByUserId(Integer userId);
+
+	Optional<Habit> findByIdAndUserId(Integer id, Integer userId);
 }

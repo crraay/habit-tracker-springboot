@@ -1,6 +1,7 @@
 package com.kostya.habittracker.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -12,6 +13,7 @@ import java.time.LocalDate;
 
 import com.kostya.habittracker.model.HabitTrackRequest;
 import com.kostya.habittracker.model.HabitTrackResponse;
+import com.kostya.habittracker.model.UserDetails;
 import com.kostya.habittracker.service.HabitTrackService;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -28,17 +30,26 @@ public class HabitTrackController {
     HabitTrackService habitTrackService;
 
     @GetMapping("/{date}")
-    List<HabitTrackResponse> getTrackingList(@PathVariable("date") LocalDate date) {
-        return this.habitTrackService.getTrackingList(date);
+    List<HabitTrackResponse> getTrackingList(
+        @PathVariable LocalDate date,
+        @AuthenticationPrincipal UserDetails userDetails) {
+
+        return this.habitTrackService.getTrackingList(date, userDetails.getUser());
     }
 
     @PostMapping("")
-    public void trackHabit(@RequestBody HabitTrackRequest request) {
-        this.habitTrackService.trackHabit(request);
+    public void trackHabit(
+        @RequestBody HabitTrackRequest request,
+        @AuthenticationPrincipal UserDetails userDetails) {
+
+        this.habitTrackService.trackHabit(request, userDetails.getUser());
     }
 
     @DeleteMapping("")
-    public void untrackHabit(@RequestBody HabitTrackRequest request) {
-        this.habitTrackService.untrackHabit(request);
+    public void untrackHabit(
+        @RequestBody HabitTrackRequest request,
+        @AuthenticationPrincipal UserDetails userDetails) {
+
+        this.habitTrackService.untrackHabit(request, userDetails.getUser());
     }
 }

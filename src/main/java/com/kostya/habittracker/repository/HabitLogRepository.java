@@ -3,14 +3,17 @@ package com.kostya.habittracker.repository;
 import java.time.LocalDate;
 import java.util.List;
 
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
+import org.springframework.data.repository.Repository;
 
 import com.kostya.habittracker.entity.Habit;
 import com.kostya.habittracker.entity.HabitLog;
 
-@Repository
-public interface HabitLogRepository extends JpaRepository<HabitLog, Integer> {
+@org.springframework.stereotype.Repository
+public interface HabitLogRepository extends Repository<HabitLog, Integer> {
+
+	HabitLog save(HabitLog habitLog);
+
+	void delete(HabitLog habitLog);
 
 	List<HabitLog> findByDate(LocalDate date);
 

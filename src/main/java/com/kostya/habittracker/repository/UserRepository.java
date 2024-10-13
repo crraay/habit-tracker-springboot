@@ -1,10 +1,13 @@
 package com.kostya.habittracker.repository;
 
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.repository.Repository;
 
 import com.kostya.habittracker.entity.User;
 
-public interface UserRepository extends JpaRepository<User, Integer> {
+@org.springframework.stereotype.Repository
+public interface UserRepository extends Repository<User, Integer> {
+    
+    User save(User user);
     
     User findByUsername(String username);
 }
