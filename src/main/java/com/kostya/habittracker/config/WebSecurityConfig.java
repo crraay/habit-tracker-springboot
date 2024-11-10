@@ -16,6 +16,8 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import com.kostya.habittracker.filter.JwtRequestFilter;
 
+import jakarta.servlet.http.HttpServletResponse;
+
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig {
@@ -42,17 +44,26 @@ public class WebSecurityConfig {
 			.cors(cors -> cors.configurationSource(corsConfigurationSource()))
 			.csrf(csrf -> csrf.disable())
 			.authorizeHttpRequests(request -> request
-				.requestMatchers("/api/auth/login").permitAll()
+				.requestMatchers("/api/auth/**").permitAll()
 				// TODO rework
 				.requestMatchers("/swagger-ui/*").permitAll()
 				.requestMatchers("/v3/api-docs/*").permitAll()
 				.requestMatchers("/v3/api-docs").permitAll()
 				.anyRequest().authenticated()
 			)
-			.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+			.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+			.exceptionHandling(exceptionHandling -> exceptionHandling
+				.authenticationEntryPoint((request, response, authException) -> {
+					response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
+				})
+				.accessDeniedHandler((request, response, accessDeniedException) -> {
+					response.sendError(HttpServletResponse.SC_FORBIDDEN, "Forbidden");
+				})
+			);
 
 		http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
 
 		return http.build();
 	}
+
 }

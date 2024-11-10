@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.kostya.habittracker.entity.Habit;
 import com.kostya.habittracker.entity.User;
+import com.kostya.habittracker.exception.NotFoundException;
 import com.kostya.habittracker.model.HabitRequest;
 import com.kostya.habittracker.model.HabitResponse;
 import com.kostya.habittracker.repository.HabitRepository;
@@ -33,7 +34,7 @@ public class HabitServiceImpl implements HabitService {
 	@Override
 	public HabitResponse getHabit(Integer id, User user) {
 		Habit entity = this.habitRepository.findByIdAndUserId(id, user.getId())
-			.orElseThrow(() -> new RuntimeException("Habit not found"));
+			.orElseThrow(() -> new NotFoundException("Habit not found"));
 		
 		return HabitResponse.convert(entity);
 	}
@@ -57,7 +58,7 @@ public class HabitServiceImpl implements HabitService {
 	@Override
 	public void deleteHabit(Integer id, User user) {
 		Habit entity = this.habitRepository.findByIdAndUserId(id, user.getId())
-			.orElseThrow(() -> new RuntimeException("Habit not found"));
+			.orElseThrow(() -> new NotFoundException("Habit not found"));
 
 		this.habitRepository.delete(entity);
 	}

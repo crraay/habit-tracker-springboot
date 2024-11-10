@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.kostya.habittracker.config.PasswordEncoderComponent;
 import com.kostya.habittracker.entity.User;
+import com.kostya.habittracker.exception.UnauthorizedException;
 import com.kostya.habittracker.model.LoginRequest;
 import com.kostya.habittracker.model.LoginResponse;
 import com.kostya.habittracker.repository.UserRepository;
@@ -34,7 +35,7 @@ public class AuthServiceImpl implements AuthService {
     public LoginResponse login(LoginRequest loginRequest) {
         User user = this.userRepository.findByUsername(loginRequest.getUsername());
         if (user == null || !passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())) {
-            throw new RuntimeException("Invalid username or password"); 
+            throw new UnauthorizedException("Invalid username or password"); 
         }
       
         String token = Jwts.builder()

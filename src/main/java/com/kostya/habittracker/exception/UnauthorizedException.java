@@ -1,0 +1,9 @@
+package com.kostya.habittracker.exception;
+
+public class UnauthorizedException extends RuntimeException {
+
+    public UnauthorizedException(String message) {
+        super(message);
+    }
+    
+}
