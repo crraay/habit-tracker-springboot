@@ -2,6 +2,8 @@ package com.kostya.habittracker.controller;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -25,6 +27,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 @Tag(name = "habit-mgmt")
 @RequestMapping("/api/habit")
 public class HabitController {
+
+	private static final Logger logger = LoggerFactory.getLogger(HabitController.class);
 	
 	@Autowired
 	HabitService habitService;

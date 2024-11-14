@@ -1,5 +1,7 @@
 package com.kostya.habittracker.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -25,6 +27,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 @Tag(name = "habit-track")
 @RequestMapping("/api/habit-track")
 public class HabitTrackController {
+
+    private static final Logger logger = LoggerFactory.getLogger(HabitTrackController.class);
     
     @Autowired
     HabitTrackService habitTrackService;
