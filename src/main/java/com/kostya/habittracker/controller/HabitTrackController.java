@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 import java.time.LocalDate;
 
+import com.kostya.habittracker.annotation.LogExecution;
 import com.kostya.habittracker.model.HabitTrackRequest;
 import com.kostya.habittracker.model.HabitTrackResponse;
 import com.kostya.habittracker.model.UserDetails;
@@ -26,6 +27,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 @RestController
 @Tag(name = "habit-track")
 @RequestMapping("/api/habit-track")
+@LogExecution
 public class HabitTrackController {
 
     private static final Logger logger = LoggerFactory.getLogger(HabitTrackController.class);

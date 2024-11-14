@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.kostya.habittracker.model.UserDetails;
+import com.kostya.habittracker.annotation.LogExecution;
 import com.kostya.habittracker.model.HabitRequest;
 import com.kostya.habittracker.model.HabitResponse;
 import com.kostya.habittracker.service.HabitService;
@@ -26,6 +27,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 @RestController
 @Tag(name = "habit-mgmt")
 @RequestMapping("/api/habit")
+@LogExecution
 public class HabitController {
 
 	private static final Logger logger = LoggerFactory.getLogger(HabitController.class);
