@@ -11,5 +11,7 @@ public class HabitTrackResponse {
 
     String habitName;
 
+    Integer streak;
+
     Boolean status;
 }

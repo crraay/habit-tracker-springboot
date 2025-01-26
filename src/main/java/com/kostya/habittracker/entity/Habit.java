@@ -1,5 +1,6 @@
 package com.kostya.habittracker.entity;
 
+import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
@@ -27,4 +28,9 @@ public class Habit {
 	
 	@Column(nullable = false)
 	String name;
+
+	// TODO rework into streak entity
+	@Column(nullable = false)
+	@ColumnDefault("0")
+	Integer streak = 0;
 }

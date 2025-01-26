@@ -18,4 +18,6 @@ public interface HabitLogRepository extends Repository<HabitLog, Integer> {
 	List<HabitLog> findByDate(LocalDate date);
 
 	HabitLog findByHabitAndDate(Habit habit, LocalDate date);
+
+    List<HabitLog> findByHabitOrderByDateDesc(Habit habit);
 }
