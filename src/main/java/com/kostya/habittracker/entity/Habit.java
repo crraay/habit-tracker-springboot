@@ -12,11 +12,13 @@ import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 @Data
 @Entity
 @Table
-public class Habit {
+@EqualsAndHashCode(callSuper = true)
+public class Habit extends BasicAudit {
 
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

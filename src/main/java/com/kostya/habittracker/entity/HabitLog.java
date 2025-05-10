@@ -9,6 +9,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import java.time.LocalDate;
 
 import org.hibernate.annotations.OnDelete;
@@ -19,7 +20,8 @@ import org.hibernate.annotations.OnDeleteAction;
 @Table(uniqueConstraints = {
     @UniqueConstraint(columnNames = {"habit_id", "date"})
 })
-public class HabitLog {
+@EqualsAndHashCode(callSuper = true)
+public class HabitLog extends BasicAudit {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
