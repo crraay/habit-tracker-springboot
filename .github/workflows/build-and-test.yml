@@ -19,6 +19,11 @@ jobs:
       - name: Build with Maven
         run: mvn -f pom.xml clean package -DskipTests
 
+      - name: Show contents of the current working directory
+        run: ls -la
+      - name: Show contents of the target directory
+        run: ls -la target
+
       # - name: Run tests
       #   run: |
       #     ./mvnw test
