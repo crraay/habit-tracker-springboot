@@ -1,0 +1,33 @@
+name: Deploy to AWS Elastic Beanstalk
+run-name: Deploy to Elastic Beanstalk #${{ github.run_number }}
+on: 
+    push:
+      branches:
+        - feat/actions_cicd
+    workflow_dispatch:
+
+jobs:
+  build-and-test:
+    uses: ./.github/workflows/build-and-test.yml
+
+  deploy-to-elastic-beanstalk:
+    runs-on: ubuntu-latest
+    needs: build-and-test
+    steps:
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: habit-tracker-springboot
+
+      - name: Deploy to Elastic Beanstalk
+        uses: einaregilsson/beanstalk-deploy@v21
+        with:
+          aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          application_name: ${{ secrets.EB_APPLICATION_NAME }}
+          environment_name: ${{ secrets.EB_ENVIRONMENT_NAME }}
+          region: ${{ secrets.AWS_REGION }}
+          version_label: "v-${{ github.run_number }}"
+          deployment_package: .
+          wait_for_deployment: true
+          wait_for_environment_recovery: true
