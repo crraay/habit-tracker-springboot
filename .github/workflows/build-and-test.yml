@@ -1,34 +1,45 @@
 name: Build and Test
 
-on: push
+on:
+  push:
+    branches:
+      - feat/actions_cicd
+  workflow_call:
+    outputs:
+      jar-file:
+        description: "Build artifacts"
+        value: ${{ jobs.build-and-test.outputs.jar-file }}
 
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        java-version: ['17']
+    outputs:
+      jar-file: ${{ steps.archive.outputs.jar-file }}
     steps:
-      - name: Checkout code
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Set up JDK
+      - name: Set up JDK ${{ matrix.java-version }}
         uses: actions/setup-java@v4
         with:
           distribution: 'corretto'
-          java-version: '17'
+          java-version: ${{ matrix.java-version }}
           cache: 'maven'
 
       - name: Build with Maven
-        run: mvn -f pom.xml clean package -DskipTests
+        run: mvn -f pom.xml clean compile
 
-      - name: Show contents of the current working directory
-        run: ls -la
-      - name: Show contents of the target directory
-        run: ls -la target
+      - name: Run tests
+        run: mvn -f pom.xml test
 
-      # - name: Run tests
-      #   run: |
-      #     ./mvnw test
+      - name: Package application
+        run: mvn -f pom.xml package -DskipTests
 
       - name: Archive production artifacts
+        id: archive
         uses: actions/upload-artifact@v4
         with:
           name: habit-tracker-springboot
