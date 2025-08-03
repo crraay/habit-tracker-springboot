@@ -3,6 +3,7 @@ run-name: Deploy to Elastic Beanstalk #${{ github.run_number }}
 on: 
     push:
       branches:
+        - main
         - feat/actions_cicd
     workflow_dispatch:
 
