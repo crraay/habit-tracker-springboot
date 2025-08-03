@@ -1,8 +1,10 @@
 package com.kostya.habittracker.config;
 
 import java.util.Arrays;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -25,12 +27,27 @@ public class WebSecurityConfig {
 	@Autowired
 	private JwtRequestFilter jwtRequestFilter;
 
+	@Value("${cors.allowed-origins}")
+	private String allowedOrigins;
+
+	@Value("${cors.allowed-methods}")
+	private String allowedMethods;
+
+	@Value("${cors.allowed-headers}")
+	private String allowedHeaders;
+
 	@Bean
 	CorsConfigurationSource corsConfigurationSource() {
 		CorsConfiguration configuration = new CorsConfiguration();
-		configuration.setAllowedOrigins(Arrays.asList("http://localhost:4200"));
-		configuration.setAllowedMethods(Arrays.asList("HEAD", "GET", "POST", "PUT", "DELETE", "PATCH"));
-		configuration.setAllowedHeaders(Arrays.asList("Authorization", "Cache-Control", "Content-Type"));
+		
+		// Parse comma-separated values from properties
+		List<String> origins = Arrays.asList(allowedOrigins.split(","));
+		List<String> methods = Arrays.asList(allowedMethods.split(","));
+		List<String> headers = Arrays.asList(allowedHeaders.split(","));
+		
+		configuration.setAllowedOrigins(origins);
+		configuration.setAllowedMethods(methods);
+		configuration.setAllowedHeaders(headers);
 
 		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
 		source.registerCorsConfiguration("/**", configuration);
@@ -45,6 +62,7 @@ public class WebSecurityConfig {
 			.csrf(csrf -> csrf.disable())
 			.authorizeHttpRequests(request -> request
 				.requestMatchers("/api/auth/**").permitAll()
+				.requestMatchers("/actuator/health").permitAll()
 				// TODO rework
 				.requestMatchers("/swagger-ui/*").permitAll()
 				.requestMatchers("/v3/api-docs/*").permitAll()
