@@ -30,6 +30,6 @@ jobs:
           region: ${{ secrets.AWS_REGION }}
           version_label: "v-${{ github.run_number }}"
         #   deployment_package: site-*.jar
-          deployment_package: ./habittracker-*.jar
+          deployment_package: habittracker-*.jar
           wait_for_deployment: true
           wait_for_environment_recovery: true
