@@ -4,7 +4,6 @@ on:
     push:
       branches:
         - main
-        - feat/actions_cicd
     workflow_dispatch:
 
 jobs:
