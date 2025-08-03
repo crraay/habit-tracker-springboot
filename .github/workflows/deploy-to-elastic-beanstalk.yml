@@ -19,6 +19,11 @@ jobs:
         with:
           name: habit-tracker-springboot
 
+      - name: Find JAR file
+        run: |
+          JAR_FILE=$(find . -name "habittracker-*.jar" -type f | head -1)
+          echo "JAR_FILE=$JAR_FILE" >> $GITHUB_ENV
+
       - name: Deploy to Elastic Beanstalk
         uses: einaregilsson/beanstalk-deploy@v21
         with:
@@ -29,7 +34,6 @@ jobs:
           existing_bucket_name: ${{ secrets.EB_BUCKET_NAME }}
           region: ${{ secrets.AWS_REGION }}
           version_label: "v-${{ github.run_number }}"
-        #   deployment_package: site-*.jar
-          deployment_package: habittracker-*.jar
+          deployment_package: ${{ env.JAR_FILE }}
           wait_for_deployment: true
           wait_for_environment_recovery: true
