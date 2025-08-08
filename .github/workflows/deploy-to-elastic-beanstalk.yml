@@ -21,7 +21,7 @@ jobs:
 
       - name: Find JAR file
         run: |
-          JAR_FILE=$(find . -name "habittracker-*.jar" -type f | head -1)
+          JAR_FILE=$(find . -name "habit-tracker-springboot-*.jar" -type f | head -1)
           echo "JAR_FILE=$JAR_FILE" >> $GITHUB_ENV
 
       - name: Deploy to Elastic Beanstalk

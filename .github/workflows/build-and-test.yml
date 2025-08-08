@@ -43,5 +43,5 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: habit-tracker-springboot
-          path: target/habittracker-*.jar
+          path: target/habit-tracker-springboot-*.jar
           retention-days: 1
