@@ -6,12 +6,12 @@
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
 		<version>3.3.3-SNAPSHOT</version>
-		<relativePath/> <!-- lookup parent from repository -->
+		<relativePath/>
 	</parent>
 	<groupId>com.kostya</groupId>
-	<artifactId>habittracker</artifactId>
+	<artifactId>habit-tracker-springboot</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>habittracker</name>
+	<name>habit-tracker-springboot</name>
 	<description>Backend for Habit Tracker web-app</description>
 	<url/>
 	<licenses>
@@ -66,11 +66,27 @@
 			<artifactId>postgresql</artifactId>
 		</dependency>
 		
+		<!-- Lombok: Provides annotations for generating boilerplate code -->
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
 		</dependency>
-		
+
+		<!-- Springdoc OpenAPI: Provides OpenAPI support for Spring Boot -->
+		<dependency>
+		    <groupId>org.springdoc</groupId>
+		    <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+		    <version>2.5.0</version>
+		</dependency>
+
+		<!-- JJWT: Provides JWT support -->
+		<dependency>
+			<groupId>io.jsonwebtoken</groupId>
+			<artifactId>jjwt</artifactId>
+			<version>0.12.6</version>
+		</dependency>
+
+		<!-- Test dependencies -->
 		<!-- Spring Boot Starter Test: Provides testing support, including JUnit, Mockito, and Spring TestContext Framework -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -78,24 +94,12 @@
 			<scope>test</scope>
 		</dependency>
 		
+		<!-- Spring Boot Starter Security Test: Provides testing support for Spring Security -->
 		<dependency>
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-test</artifactId>
 			<scope>test</scope>
 		</dependency>
-		
-		<dependency>
-		    <groupId>org.springdoc</groupId>
-		    <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
-		    <version>2.5.0</version>
-		</dependency>
-
-		<dependency>
-			<groupId>io.jsonwebtoken</groupId>
-			<artifactId>jjwt</artifactId>
-			<version>0.12.6</version>
-		</dependency>
-
 	</dependencies>
 
 	<build>
@@ -114,6 +118,7 @@
 			</plugin>
 		</plugins>
 	</build>
+
 	<repositories>
 		<repository>
 			<id>spring-snapshots</id>
@@ -124,6 +129,7 @@
 			</releases>
 		</repository>
 	</repositories>
+
 	<pluginRepositories>
 		<pluginRepository>
 			<id>spring-snapshots</id>
@@ -134,5 +140,4 @@
 			</releases>
 		</pluginRepository>
 	</pluginRepositories>
-
 </project>
