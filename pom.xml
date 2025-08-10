@@ -86,6 +86,20 @@
 			<version>0.12.6</version>
 		</dependency>
 
+		<!-- FLYWAY MIGRATIONS CORE -->
+        <dependency>
+            <groupId>org.flywaydb</groupId>
+            <artifactId>flyway-core</artifactId>
+            <version>11.10.3</version>
+        </dependency>
+
+		<!-- FLYWAY POSTGRESQL -->
+        <dependency>
+            <groupId>org.flywaydb</groupId>
+            <artifactId>flyway-database-postgresql</artifactId>
+            <version>11.10.3</version>
+        </dependency>
+
 		<!-- Test dependencies -->
 		<!-- Spring Boot Starter Test: Provides testing support, including JUnit, Mockito, and Spring TestContext Framework -->
 		<dependency>
@@ -124,6 +138,11 @@
 					</excludes>
 				</configuration>
 			</plugin>
+			<plugin>
+                <groupId>org.flywaydb</groupId>
+                <artifactId>flyway-maven-plugin</artifactId>
+                <version>11.10.3</version>
+            </plugin>
 		</plugins>
 	</build>
 
