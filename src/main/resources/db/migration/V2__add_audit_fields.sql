@@ -1,19 +1,19 @@
 -- Add audit fields to habit_log table
-ALTER TABLE habit_log
+ALTER TABLE public.habit_log
     ADD COLUMN created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     ADD COLUMN modified_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     ADD COLUMN created_by VARCHAR(255) NOT NULL DEFAULT 'system',
     ADD COLUMN modified_by VARCHAR(255) NOT NULL DEFAULT 'system';
 
 -- Add audit fields to habit table
-ALTER TABLE habit
+ALTER TABLE public.habit
     ADD COLUMN created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     ADD COLUMN modified_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     ADD COLUMN created_by VARCHAR(255) NOT NULL DEFAULT 'system',
     ADD COLUMN modified_by VARCHAR(255) NOT NULL DEFAULT 'system';
 
 -- Add audit fields to user table
-ALTER TABLE "user"
+ALTER TABLE public."user"
     ADD COLUMN created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     ADD COLUMN modified_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     ADD COLUMN created_by VARCHAR(255) NOT NULL DEFAULT 'system',

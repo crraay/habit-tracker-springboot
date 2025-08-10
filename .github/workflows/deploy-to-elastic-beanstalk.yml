@@ -1,5 +1,5 @@
 name: Deploy to AWS Elastic Beanstalk
-run-name: Deploy to Elastic Beanstalk #${{ github.run_number }}
+
 on: 
     push:
       branches:
