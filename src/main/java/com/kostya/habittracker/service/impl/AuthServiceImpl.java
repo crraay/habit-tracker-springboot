@@ -1,4 +1,4 @@
-package com.kostya.habittracker.service;
+package com.kostya.habittracker.service.impl;
 
 import java.util.Date;
 
@@ -14,6 +14,7 @@ import com.kostya.habittracker.exception.UnauthorizedException;
 import com.kostya.habittracker.model.LoginRequest;
 import com.kostya.habittracker.model.LoginResponse;
 import com.kostya.habittracker.repository.UserRepository;
+import com.kostya.habittracker.service.AuthService;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;

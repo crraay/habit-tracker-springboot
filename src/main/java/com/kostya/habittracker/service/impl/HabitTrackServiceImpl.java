@@ -1,4 +1,4 @@
-package com.kostya.habittracker.service;
+package com.kostya.habittracker.service.impl;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -18,6 +18,8 @@ import com.kostya.habittracker.model.HabitTrackRequest;
 import com.kostya.habittracker.model.HabitTrackResponse;
 import com.kostya.habittracker.repository.HabitLogRepository;
 import com.kostya.habittracker.repository.HabitRepository;
+import com.kostya.habittracker.service.HabitTrackService;
+import com.kostya.habittracker.service.StreakService;
 
 @Service
 public class HabitTrackServiceImpl implements HabitTrackService {

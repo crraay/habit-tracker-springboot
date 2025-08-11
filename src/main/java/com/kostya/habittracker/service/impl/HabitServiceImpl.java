@@ -1,4 +1,4 @@
-package com.kostya.habittracker.service;
+package com.kostya.habittracker.service.impl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,6 +14,7 @@ import com.kostya.habittracker.exception.NotFoundException;
 import com.kostya.habittracker.model.HabitRequest;
 import com.kostya.habittracker.model.HabitResponse;
 import com.kostya.habittracker.repository.HabitRepository;
+import com.kostya.habittracker.service.HabitService;
 
 @Service
 public class HabitServiceImpl implements HabitService {

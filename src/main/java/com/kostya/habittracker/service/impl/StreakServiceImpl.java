@@ -1,4 +1,4 @@
-package com.kostya.habittracker.service;
+package com.kostya.habittracker.service.impl;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import com.kostya.habittracker.entity.Habit;
 import com.kostya.habittracker.entity.HabitLog;
 import com.kostya.habittracker.repository.HabitLogRepository;
+import com.kostya.habittracker.service.StreakService;
 
 @Service
 public class StreakServiceImpl implements StreakService {

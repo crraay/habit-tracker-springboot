@@ -1,4 +1,4 @@
-package com.kostya.habittracker.service;
+package com.kostya.habittracker.service.impl;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
@@ -17,6 +17,7 @@ import com.kostya.habittracker.entity.User;
 import com.kostya.habittracker.model.HabitStat;
 import com.kostya.habittracker.repository.HabitLogRepository;
 import com.kostya.habittracker.repository.HabitRepository;
+import com.kostya.habittracker.service.HabitStatisticsService;
 
 @Service
 public class HabitStatisticsServiceImpl implements HabitStatisticsService {
