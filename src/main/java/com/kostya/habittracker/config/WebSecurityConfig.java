@@ -17,8 +17,8 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import com.kostya.habittracker.filter.JwtRequestFilter;
-
-import jakarta.servlet.http.HttpServletResponse;
+import com.kostya.habittracker.security.RestAccessDeniedHandler;
+import com.kostya.habittracker.security.RestAuthenticationEntryPoint;
 
 @Configuration
 @EnableWebSecurity
@@ -26,6 +26,12 @@ public class WebSecurityConfig {
 
 	@Autowired
 	private JwtRequestFilter jwtRequestFilter;
+
+	@Autowired
+	private RestAuthenticationEntryPoint restAuthenticationEntryPoint;
+
+	@Autowired
+	private RestAccessDeniedHandler restAccessDeniedHandler;
 
 	@Value("${cors.allowed-origins}")
 	private String allowedOrigins;
@@ -63,20 +69,14 @@ public class WebSecurityConfig {
 			.authorizeHttpRequests(request -> request
 				.requestMatchers("/api/auth/**").permitAll()
 				.requestMatchers("/actuator/health").permitAll()
-				// TODO rework
-				.requestMatchers("/swagger-ui/*").permitAll()
-				.requestMatchers("/v3/api-docs/*").permitAll()
-				.requestMatchers("/v3/api-docs").permitAll()
+				.requestMatchers("/swagger-ui/**").permitAll()
+				.requestMatchers("/v3/api-docs/**").permitAll()
 				.anyRequest().authenticated()
 			)
 			.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 			.exceptionHandling(exceptionHandling -> exceptionHandling
-				.authenticationEntryPoint((request, response, authException) -> {
-					response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
-				})
-				.accessDeniedHandler((request, response, accessDeniedException) -> {
-					response.sendError(HttpServletResponse.SC_FORBIDDEN, "Forbidden");
-				})
+				.authenticationEntryPoint(restAuthenticationEntryPoint)
+				.accessDeniedHandler(restAccessDeniedHandler)
 			);
 
 		http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);

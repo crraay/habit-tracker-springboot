@@ -4,5 +4,5 @@ import com.kostya.habittracker.entity.Habit;
 
 public interface StreakService {
     
-    public Integer calculateStreak(Habit habit);
+    Integer calculateStreak(Habit habit);
 }

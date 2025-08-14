@@ -8,5 +8,5 @@ import com.kostya.habittracker.model.HabitStat;
 
 public interface HabitStatisticsService {
     
-    public List<HabitStat> getAggregatedData(LocalDate startDate, LocalDate endDate, User currentUser);
+    List<HabitStat> getAggregatedData(LocalDate startDate, LocalDate endDate, User currentUser);
 }

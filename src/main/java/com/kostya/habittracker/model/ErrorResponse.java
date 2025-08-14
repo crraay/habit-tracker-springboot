@@ -1,6 +1,7 @@
 package com.kostya.habittracker.model;
 
 import lombok.Data;
+import java.time.Instant;
 
 @Data
 public class ErrorResponse {
@@ -10,4 +11,10 @@ public class ErrorResponse {
     String error;
 
     String message;
+
+    String path;
+
+    String correlationId;
+
+    Instant timestamp;
 }
