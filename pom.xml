@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>3.3.3-SNAPSHOT</version>
+		<version>3.5.4</version>
 		<relativePath/>
 	</parent>
 	<groupId>com.kostya</groupId>
@@ -13,22 +13,31 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<name>habit-tracker-springboot</name>
 	<description>Backend for Habit Tracker web-app</description>
-	<url/>
+	<url>https://github.com/crraay/habit-tracker-springboot</url>
+	<packaging>jar</packaging>
+
 	<licenses>
-		<license/>
+		<license>
+			<name>MIT License</name>
+			<url>https://opensource.org/licenses/MIT</url>
+			<distribution>repo</distribution>
+		</license>
 	</licenses>
+
 	<developers>
-		<developer/>
+		<developer>
+			<id>kostya</id>
+			<name>Konstantin Konoshenko</name>
+			<url>https://github.com/crraay</url>
+		</developer>
 	</developers>
-	<scm>
-		<connection/>
-		<developerConnection/>
-		<tag/>
-		<url/>
-	</scm>
+
 	<properties>
 		<java.version>17</java.version>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 	</properties>
+
 	<dependencies>
 		<!-- Spring Boot Starter: Provides core Spring Boot support, including auto-configuration -->
 		<dependency>
@@ -58,12 +67,15 @@
 		<dependency>
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
+			<scope>runtime</scope>
 		</dependency>
 		
 		<!-- Lombok: Provides annotations for generating boilerplate code -->
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
+			<scope>provided</scope>
+			<optional>true</optional>
 		</dependency>
 
 		<!-- Springdoc OpenAPI: Provides OpenAPI support for Spring Boot -->
@@ -115,7 +127,6 @@
 			<artifactId>h2</artifactId>
 			<scope>test</scope>
 		</dependency>
-
 	</dependencies>
 
 	<build>
@@ -123,14 +134,6 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
-				<configuration>
-					<excludes>
-						<exclude>
-							<groupId>org.projectlombok</groupId>
-							<artifactId>lombok</artifactId>
-						</exclude>
-					</excludes>
-				</configuration>
 			</plugin>
 			<plugin>
                 <groupId>org.flywaydb</groupId>
@@ -139,26 +142,4 @@
             </plugin>
 		</plugins>
 	</build>
-
-	<repositories>
-		<repository>
-			<id>spring-snapshots</id>
-			<name>Spring Snapshots</name>
-			<url>https://repo.spring.io/snapshot</url>
-			<releases>
-				<enabled>false</enabled>
-			</releases>
-		</repository>
-	</repositories>
-
-	<pluginRepositories>
-		<pluginRepository>
-			<id>spring-snapshots</id>
-			<name>Spring Snapshots</name>
-			<url>https://repo.spring.io/snapshot</url>
-			<releases>
-				<enabled>false</enabled>
-			</releases>
-		</pluginRepository>
-	</pluginRepositories>
 </project>
