@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.kostya.habittracker.annotation.LogExecution;
-import com.kostya.habittracker.model.HabitStat;
+import com.kostya.habittracker.dto.HabitStat;
 import com.kostya.habittracker.model.UserDetails;
 import com.kostya.habittracker.service.HabitStatisticsService;
 

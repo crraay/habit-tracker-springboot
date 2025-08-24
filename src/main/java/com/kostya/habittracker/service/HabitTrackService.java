@@ -3,9 +3,9 @@ package com.kostya.habittracker.service;
 import java.time.LocalDate;
 import java.util.List;
 
+import com.kostya.habittracker.dto.HabitTrackRequest;
+import com.kostya.habittracker.dto.HabitTrackResponse;
 import com.kostya.habittracker.entity.User;
-import com.kostya.habittracker.model.HabitTrackRequest;
-import com.kostya.habittracker.model.HabitTrackResponse;
 
 public interface HabitTrackService {
 

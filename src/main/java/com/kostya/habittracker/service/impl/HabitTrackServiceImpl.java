@@ -7,13 +7,13 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.kostya.habittracker.dto.HabitTrackRequest;
+import com.kostya.habittracker.dto.HabitTrackResponse;
 import com.kostya.habittracker.entity.Habit;
 import com.kostya.habittracker.entity.HabitLog;
 import com.kostya.habittracker.entity.User;
 import com.kostya.habittracker.exception.ConflictException;
 import com.kostya.habittracker.exception.NotFoundException;
-import com.kostya.habittracker.model.HabitTrackRequest;
-import com.kostya.habittracker.model.HabitTrackResponse;
 import com.kostya.habittracker.repository.HabitLogRepository;
 import com.kostya.habittracker.repository.HabitRepository;
 import com.kostya.habittracker.service.HabitTrackService;

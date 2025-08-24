@@ -11,8 +11,8 @@ import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.kostya.habittracker.dto.ErrorResponse;
 import com.kostya.habittracker.filter.CorrelationIdFilter;
-import com.kostya.habittracker.model.ErrorResponse;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

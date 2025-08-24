@@ -12,8 +12,8 @@ import java.util.List;
 import java.time.LocalDate;
 
 import com.kostya.habittracker.annotation.LogExecution;
-import com.kostya.habittracker.model.HabitTrackRequest;
-import com.kostya.habittracker.model.HabitTrackResponse;
+import com.kostya.habittracker.dto.HabitTrackRequest;
+import com.kostya.habittracker.dto.HabitTrackResponse;
 import com.kostya.habittracker.model.UserDetails;
 import com.kostya.habittracker.service.HabitTrackService;
 

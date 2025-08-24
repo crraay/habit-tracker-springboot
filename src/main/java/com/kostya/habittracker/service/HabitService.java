@@ -2,9 +2,9 @@ package com.kostya.habittracker.service;
 
 import java.util.List;
 
+import com.kostya.habittracker.dto.HabitRequest;
+import com.kostya.habittracker.dto.HabitResponse;
 import com.kostya.habittracker.entity.User;
-import com.kostya.habittracker.model.HabitRequest;
-import com.kostya.habittracker.model.HabitResponse;
 
 public interface HabitService {
 	

@@ -1,4 +1,4 @@
-package com.kostya.habittracker.model;
+package com.kostya.habittracker.dto;
 
 import java.time.LocalDate;
 

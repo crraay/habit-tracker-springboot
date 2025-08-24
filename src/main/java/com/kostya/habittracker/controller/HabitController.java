@@ -16,8 +16,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.kostya.habittracker.model.UserDetails;
 import com.kostya.habittracker.annotation.LogExecution;
-import com.kostya.habittracker.model.HabitRequest;
-import com.kostya.habittracker.model.HabitResponse;
+import com.kostya.habittracker.dto.HabitRequest;
+import com.kostya.habittracker.dto.HabitResponse;
 import com.kostya.habittracker.service.HabitService;
 
 import io.swagger.v3.oas.annotations.tags.Tag;

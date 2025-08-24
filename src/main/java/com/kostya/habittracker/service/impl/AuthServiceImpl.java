@@ -8,10 +8,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.kostya.habittracker.config.PasswordEncoderComponent;
+import com.kostya.habittracker.dto.LoginRequest;
+import com.kostya.habittracker.dto.LoginResponse;
 import com.kostya.habittracker.entity.User;
 import com.kostya.habittracker.exception.UnauthorizedException;
-import com.kostya.habittracker.model.LoginRequest;
-import com.kostya.habittracker.model.LoginResponse;
 import com.kostya.habittracker.repository.UserRepository;
 import com.kostya.habittracker.service.AuthService;
 

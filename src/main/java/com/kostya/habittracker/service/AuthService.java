@@ -1,7 +1,7 @@
 package com.kostya.habittracker.service;
 
-import com.kostya.habittracker.model.LoginRequest;
-import com.kostya.habittracker.model.LoginResponse;
+import com.kostya.habittracker.dto.LoginRequest;
+import com.kostya.habittracker.dto.LoginResponse;
 
 public interface AuthService {
     

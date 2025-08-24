@@ -6,11 +6,11 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.kostya.habittracker.dto.HabitRequest;
+import com.kostya.habittracker.dto.HabitResponse;
 import com.kostya.habittracker.entity.Habit;
 import com.kostya.habittracker.entity.User;
 import com.kostya.habittracker.exception.NotFoundException;
-import com.kostya.habittracker.model.HabitRequest;
-import com.kostya.habittracker.model.HabitResponse;
 import com.kostya.habittracker.repository.HabitRepository;
 import com.kostya.habittracker.service.HabitService;
 

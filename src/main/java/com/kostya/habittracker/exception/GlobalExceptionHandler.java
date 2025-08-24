@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import com.kostya.habittracker.dto.ErrorResponse;
 import com.kostya.habittracker.filter.CorrelationIdFilter;
-import com.kostya.habittracker.model.ErrorResponse;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
