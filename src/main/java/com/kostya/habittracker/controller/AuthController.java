@@ -5,6 +5,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import jakarta.validation.Valid;
 
 import com.kostya.habittracker.annotation.LogExecution;
 import com.kostya.habittracker.dto.LoginRequest;
@@ -23,7 +25,8 @@ public class AuthController {
 	private AuthService authService;
 
 	@PostMapping("/login")
-	public LoginResponse login(@RequestBody LoginRequest loginRequest) {
-		return authService.login(loginRequest);
+	public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginRequest loginRequest) {
+		LoginResponse body = authService.login(loginRequest);
+		return ResponseEntity.ok(body);
 	}
 }

@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.List;
 import java.time.LocalDate;
@@ -20,6 +22,7 @@ import com.kostya.habittracker.service.HabitTrackService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import jakarta.validation.Valid;
 
 
 @RestController
@@ -32,26 +35,29 @@ public class HabitTrackController {
     HabitTrackService habitTrackService;
 
     @GetMapping("/{date}")
-    List<HabitTrackResponse> getTrackingList(
-        @PathVariable LocalDate date,
+    ResponseEntity<List<HabitTrackResponse>> getTrackingList(
+        @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date,
         @AuthenticationPrincipal UserDetails userDetails) {
 
-        return this.habitTrackService.getTrackingList(date, userDetails.getUser());
+        List<HabitTrackResponse> body = this.habitTrackService.getTrackingList(date, userDetails.getUser());
+        return ResponseEntity.ok(body);
     }
 
     @PostMapping("")
-    public void trackHabit(
-        @RequestBody HabitTrackRequest request,
+    public ResponseEntity<Void> trackHabit(
+        @Valid @RequestBody HabitTrackRequest request,
         @AuthenticationPrincipal UserDetails userDetails) {
 
         this.habitTrackService.trackHabit(request, userDetails.getUser());
+        return ResponseEntity.status(201).build();
     }
 
     @DeleteMapping("")
-    public void untrackHabit(
-        @RequestBody HabitTrackRequest request,
+    public ResponseEntity<Void> untrackHabit(
+        @Valid @RequestBody HabitTrackRequest request,
         @AuthenticationPrincipal UserDetails userDetails) {
 
         this.habitTrackService.untrackHabit(request, userDetails.getUser());
+        return ResponseEntity.noContent().build();
     }
 }

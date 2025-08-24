@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.slf4j.MDC;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -62,6 +63,21 @@ public class GlobalExceptionHandler {
         String path = request.getRequestURI();
         log.warn("409 Conflict: path={} msg={}", path, e.getMessage());
         return build(HttpStatus.CONFLICT, "Conflict", "Data already exists", path, cid);
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ErrorResponse handleMethodArgumentNotValid(MethodArgumentNotValidException e, HttpServletRequest request) {
+        String cid = getCorrelationId();
+        String path = request.getRequestURI();
+        String message = e.getBindingResult()
+                .getFieldErrors()
+                .stream()
+                .map(err -> err.getField() + ": " + err.getDefaultMessage())
+                .findFirst()
+                .orElse("Validation failed");
+        log.warn("400 Validation error: path={} msg={}", path, message);
+        return build(HttpStatus.BAD_REQUEST, "Bad request", message, path, cid);
     }
 
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)

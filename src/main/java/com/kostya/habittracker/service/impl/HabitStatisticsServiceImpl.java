@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.kostya.habittracker.dto.HabitStat;
+import com.kostya.habittracker.dto.HabitStatRequest;
 import com.kostya.habittracker.entity.Habit;
 import com.kostya.habittracker.entity.HabitLog;
 import com.kostya.habittracker.entity.User;
@@ -27,7 +27,7 @@ public class HabitStatisticsServiceImpl implements HabitStatisticsService {
     private HabitRepository habitRepository;
 
     @Override
-    public List<HabitStat> getAggregatedData(LocalDate startDate, LocalDate endDate, User currentUser) {
+    public List<HabitStatRequest> getAggregatedData(LocalDate startDate, LocalDate endDate, User currentUser) {
         long totalDays = ChronoUnit.DAYS.between(startDate, endDate) + 1;
         
         // Get all habits for the user
@@ -46,7 +46,7 @@ public class HabitStatisticsServiceImpl implements HabitStatisticsService {
         // Map all user habits to statistics, including those with zero completions
         return userHabits.stream()
             .map(habit -> {
-                HabitStat stats = new HabitStat();
+                HabitStatRequest stats = new HabitStatRequest();
                 stats.setHabitId(habit.getId());
                 stats.setHabitName(habit.getName());
                 stats.setDone(habitCompletionCounts.getOrDefault(habit.getId(), 0L).intValue());

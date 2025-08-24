@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
 
 import com.kostya.habittracker.model.UserDetails;
 import com.kostya.habittracker.annotation.LogExecution;
@@ -21,6 +22,7 @@ import com.kostya.habittracker.dto.HabitResponse;
 import com.kostya.habittracker.service.HabitService;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 
 @RestController
 @Tag(name = "habit-mgmt")
@@ -32,42 +34,47 @@ public class HabitController {
 	HabitService habitService;
 
 	@GetMapping("")
-	List<HabitResponse> getHabits(
+	ResponseEntity<List<HabitResponse>> getHabits(
 		@AuthenticationPrincipal UserDetails userDetails) {
 
-		return this.habitService.getHabits(userDetails.getUser());
+		List<HabitResponse> body = this.habitService.getHabits(userDetails.getUser());
+		return ResponseEntity.ok(body);
 	}
 	
 	@GetMapping("/{id}")
-	HabitResponse getHabit(
+	ResponseEntity<HabitResponse> getHabit(
 		@PathVariable Integer id,
 		@AuthenticationPrincipal UserDetails userDetails) {
 
-		return this.habitService.getHabit(id, userDetails.getUser());
+		HabitResponse body = this.habitService.getHabit(id, userDetails.getUser());
+		return ResponseEntity.ok(body);
 	}
 	
 	@PostMapping("")
-	HabitResponse createHabit(
-		@RequestBody HabitRequest request,
+	ResponseEntity<HabitResponse> createHabit(
+		@Valid @RequestBody HabitRequest request,
 		@AuthenticationPrincipal UserDetails userDetails) {
 
-		return this.habitService.createHabit(request, userDetails.getUser());
+		HabitResponse body = this.habitService.createHabit(request, userDetails.getUser());
+		return ResponseEntity.status(201).body(body);
 	}
 	
 	@PutMapping("/{id}")
-	HabitResponse updateHabit(
+	ResponseEntity<HabitResponse> updateHabit(
 		@PathVariable Integer id,
-		@RequestBody HabitRequest request,
+		@Valid @RequestBody HabitRequest request,
 		@AuthenticationPrincipal UserDetails userDetails) {
 
-		return this.habitService.updateHabit(id, request, userDetails.getUser());
+		HabitResponse body = this.habitService.updateHabit(id, request, userDetails.getUser());
+		return ResponseEntity.ok(body);
 	}
 	
 	@DeleteMapping("/{id}")
-	void deleteHabit(
+	ResponseEntity<Void> deleteHabit(
 		@PathVariable Integer id,
 		@AuthenticationPrincipal UserDetails userDetails) {
 
 		this.habitService.deleteHabit(id, userDetails.getUser());
+		return ResponseEntity.noContent().build();
 	}
 }

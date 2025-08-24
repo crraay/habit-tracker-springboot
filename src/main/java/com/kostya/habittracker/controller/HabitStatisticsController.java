@@ -8,9 +8,11 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import com.kostya.habittracker.annotation.LogExecution;
-import com.kostya.habittracker.dto.HabitStat;
+import com.kostya.habittracker.dto.HabitStatRequest;
 import com.kostya.habittracker.model.UserDetails;
 import com.kostya.habittracker.service.HabitStatisticsService;
 
@@ -28,12 +30,13 @@ public class HabitStatisticsController {
     private HabitStatisticsService habitStatisticsService;
 
     @GetMapping("/{startDate}/{endDate}")
-    List<HabitStat> getAggregatedData(
-        @PathVariable LocalDate startDate,
-        @PathVariable LocalDate endDate,
+    ResponseEntity<List<HabitStatRequest>> getAggregatedData(
+        @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+        @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
         @AuthenticationPrincipal UserDetails userDetails
     ) {
 
-        return this.habitStatisticsService.getAggregatedData(startDate, endDate, userDetails.getUser());
+        List<HabitStatRequest> body = this.habitStatisticsService.getAggregatedData(startDate, endDate, userDetails.getUser());
+        return ResponseEntity.ok(body);
     }
 }
