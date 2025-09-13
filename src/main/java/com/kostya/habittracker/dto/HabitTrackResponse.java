@@ -2,16 +2,18 @@ package com.kostya.habittracker.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 public class HabitTrackResponse {
     
     Integer habitId;
 
     String habitName;
 
-    Integer streak;
+    HabitAggregateResponse aggregate;
 
     Boolean status;
 }

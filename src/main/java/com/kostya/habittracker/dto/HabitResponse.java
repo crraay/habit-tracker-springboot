@@ -1,22 +1,16 @@
 package com.kostya.habittracker.dto;
 
-import com.kostya.habittracker.entity.Habit;
-
+import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
 @Data
 public class HabitResponse {
 
+	@NotBlank
 	Integer id;
 	
+	@NotBlank
 	String name;
-	
-	static public HabitResponse convert(Habit entity) {
-		HabitResponse response = new HabitResponse();
-		
-		response.id = entity.getId();
-		response.name = entity.getName();
-		
-		return response;
-	}
+
+	HabitAggregateResponse aggregate;
 }

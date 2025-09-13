@@ -12,4 +12,6 @@ public class HabitStatRequest {
     private Integer done;
 
     private Integer of;
+
+    private HabitAggregateResponse aggregate;
 }

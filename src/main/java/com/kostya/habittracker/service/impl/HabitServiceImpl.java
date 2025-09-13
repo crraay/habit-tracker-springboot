@@ -13,6 +13,7 @@ import com.kostya.habittracker.entity.User;
 import com.kostya.habittracker.exception.NotFoundException;
 import com.kostya.habittracker.repository.HabitRepository;
 import com.kostya.habittracker.service.HabitService;
+import com.kostya.habittracker.mapper.HabitMapper;
 
 @Service
 public class HabitServiceImpl implements HabitService {
@@ -20,13 +21,16 @@ public class HabitServiceImpl implements HabitService {
 	@Autowired
 	HabitRepository habitRepository;
 
+	@Autowired
+	HabitMapper habitMapper;
+
 	@Override
 	public List<HabitResponse> getHabits(User user) {
 		List<Habit> entities = this.habitRepository.findAllByUserId(user.getId());
 		
 		List<HabitResponse> result = new ArrayList<>();
 		for (Habit entity: entities) {
-			result.add(HabitResponse.convert(entity));
+			result.add(habitMapper.toResponse(entity));
 		}
 		
 		return result;
@@ -34,26 +38,26 @@ public class HabitServiceImpl implements HabitService {
 
 	@Override
 	public HabitResponse getHabit(Integer id, User user) {
-		Habit entity = this.habitRepository.findByIdAndUserId(id, user.getId())
+		Habit entity = this.habitRepository.findWithAggregateByIdAndUserId(id, user.getId())
 			.orElseThrow(() -> new NotFoundException("Habit not found"));
 		
-		return HabitResponse.convert(entity);
+		return habitMapper.toResponse(entity);
 	}
 
 	@Override
 	public HabitResponse createHabit(HabitRequest request, User user) {
-		Habit entity = request.convert();
+		Habit entity = habitMapper.toEntity(request);
 		entity.setUser(user);
 		
-		return HabitResponse.convert(this.habitRepository.save(entity));
+		return habitMapper.toResponse(this.habitRepository.save(entity));
 	}
 
 	@Override
 	public HabitResponse updateHabit(Integer id, HabitRequest request, User user) {
-		Habit entity = request.convert(id);
+		Habit entity = habitMapper.toEntity(id, request);
 		entity.setUser(user);
 		
-		return HabitResponse.convert(this.habitRepository.save(entity));
+		return habitMapper.toResponse(this.habitRepository.save(entity));
 	}
 
 	@Override
