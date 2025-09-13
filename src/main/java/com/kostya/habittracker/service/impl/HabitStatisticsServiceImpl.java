@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.kostya.habittracker.dto.HabitStatRequest;
+import com.kostya.habittracker.dto.HabitAggregateResponse;
 import com.kostya.habittracker.entity.Habit;
 import com.kostya.habittracker.entity.HabitLog;
 import com.kostya.habittracker.entity.User;
@@ -51,6 +52,15 @@ public class HabitStatisticsServiceImpl implements HabitStatisticsService {
                 stats.setHabitName(habit.getName());
                 stats.setDone(habitCompletionCounts.getOrDefault(habit.getId(), 0L).intValue());
                 stats.setOf((int) totalDays);
+                HabitAggregateResponse ar = new HabitAggregateResponse();
+                if (habit.getAggregate() != null) {
+                    ar.setTotalCheckIns(habit.getAggregate().getTotalCheckIns());
+                    ar.setCurrentStreak(habit.getAggregate().getCurrentStreak());
+                    ar.setBestStreak(habit.getAggregate().getBestStreak());
+                    ar.setStreakStartDate(habit.getAggregate().getStreakStartDate());
+                    ar.setLastCheckInDate(habit.getAggregate().getLastCheckInDate());
+                    stats.setAggregate(ar);
+                }
                 return stats;
             })
             .collect(Collectors.toList());

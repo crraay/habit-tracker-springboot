@@ -1,8 +1,11 @@
 package com.kostya.habittracker.entity;
 
-import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
+
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -10,9 +13,9 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 @Data
 @Entity
@@ -31,8 +34,8 @@ public class Habit extends BasicAudit {
 	@Column(nullable = false)
 	String name;
 
-	// TODO rework into streak entity
-	@Column(nullable = false)
-	@ColumnDefault("0")
-	Integer streak = 0;
+	@OneToOne(mappedBy = "habit", fetch = FetchType.LAZY, optional = true)
+	@EqualsAndHashCode.Exclude
+	@ToString.Exclude
+	HabitAggregate aggregate;
 }

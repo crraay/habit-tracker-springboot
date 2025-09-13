@@ -4,11 +4,18 @@ import java.time.Instant;
 import java.util.Optional;
 
 import org.slf4j.MDC;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
+import org.springframework.lang.NonNull;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.context.request.ServletWebRequest;
+import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import com.kostya.habittracker.dto.ErrorResponse;
 import com.kostya.habittracker.filter.CorrelationIdFilter;
@@ -18,7 +25,29 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RestControllerAdvice
-public class GlobalExceptionHandler {
+public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
+    
+    @Override
+    protected ResponseEntity<Object> handleMethodArgumentNotValid(
+        @NonNull MethodArgumentNotValidException ex,
+        @NonNull HttpHeaders headers,
+        @NonNull HttpStatusCode status,
+        @NonNull WebRequest request
+        ) {
+        String message = ex.getBindingResult()
+                .getFieldErrors()
+                .stream()
+                .map(err -> err.getField() + ": " + err.getDefaultMessage())
+                .findFirst()
+                .orElse("Validation failed");
+    
+        HttpServletRequest httpRequest = ((ServletWebRequest) request).getRequest();
+        String path = httpRequest.getRequestURI();
+        String cid = getCorrelationId();
+        log.warn("400 Validation error: path={} msg={}", path, message);
+        ErrorResponse body = build(HttpStatus.BAD_REQUEST, "Bad request", message, path, cid);
+        return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
+    }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(BadRequestException.class)
@@ -65,21 +94,7 @@ public class GlobalExceptionHandler {
         return build(HttpStatus.CONFLICT, "Conflict", "Data already exists", path, cid);
     }
 
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ErrorResponse handleMethodArgumentNotValid(MethodArgumentNotValidException e, HttpServletRequest request) {
-        String cid = getCorrelationId();
-        String path = request.getRequestURI();
-        String message = e.getBindingResult()
-                .getFieldErrors()
-                .stream()
-                .map(err -> err.getField() + ": " + err.getDefaultMessage())
-                .findFirst()
-                .orElse("Validation failed");
-        log.warn("400 Validation error: path={} msg={}", path, message);
-        return build(HttpStatus.BAD_REQUEST, "Bad request", message, path, cid);
-    }
-
+    
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(Exception.class)
     public ErrorResponse serverError(Exception e, HttpServletRequest request) {
