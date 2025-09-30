@@ -1,9 +1,12 @@
 package com.kostya.habittracker.dto;
 
-import lombok.Data;
+import lombok.Builder;
+import lombok.Getter;
+
 import java.time.Instant;
 
-@Data
+@Getter
+@Builder
 public class ErrorResponse {
 
     Integer status;

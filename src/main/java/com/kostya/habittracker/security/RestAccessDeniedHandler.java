@@ -34,17 +34,18 @@ public class RestAccessDeniedHandler implements AccessDeniedHandler {
 		String method = request.getMethod();
 		log.warn("403 Forbidden: method={} path={}", method, path);
 
-		ErrorResponse body = new ErrorResponse();
-		body.setStatus(HttpServletResponse.SC_FORBIDDEN);
-		body.setError("Forbidden");
-		body.setMessage("Not allowed");
-		body.setPath(path);
-		body.setCorrelationId(cid);
-		body.setTimestamp(Instant.now());
+		ErrorResponse errorResponse = ErrorResponse.builder()
+			.status(HttpServletResponse.SC_FORBIDDEN)
+			.error("Forbidden")
+			.message("Not allowed")
+			.path(path)
+			.correlationId(cid)
+			.timestamp(Instant.now())
+			.build();
 
 		response.setStatus(HttpServletResponse.SC_FORBIDDEN);
 		response.setContentType("application/json");
-		objectMapper.writeValue(response.getOutputStream(), body);
+		objectMapper.writeValue(response.getOutputStream(), errorResponse);
 	}
 }
 
