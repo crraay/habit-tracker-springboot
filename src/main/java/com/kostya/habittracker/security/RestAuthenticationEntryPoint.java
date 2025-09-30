@@ -34,17 +34,18 @@ public class RestAuthenticationEntryPoint implements AuthenticationEntryPoint {
 		String method = request.getMethod();
 		log.warn("401 Unauthorized: method={} path={}", method, path);
 
-		ErrorResponse body = new ErrorResponse();
-		body.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-		body.setError("Unauthorized");
-		body.setMessage("Incorrect authentication info");
-		body.setPath(path);
-		body.setCorrelationId(cid);
-		body.setTimestamp(Instant.now());
+		ErrorResponse errorResponse = ErrorResponse.builder()
+			.status(HttpServletResponse.SC_UNAUTHORIZED)
+			.error("Unauthorized")
+			.message("Incorrect authentication info")
+			.path(path)
+			.correlationId(cid)
+			.timestamp(Instant.now())
+			.build();
 
 		response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 		response.setContentType("application/json");
-		objectMapper.writeValue(response.getOutputStream(), body);
+		objectMapper.writeValue(response.getOutputStream(), errorResponse);
 	}
 }
 

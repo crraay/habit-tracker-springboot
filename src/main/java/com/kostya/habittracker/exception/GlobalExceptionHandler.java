@@ -44,75 +44,133 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         HttpServletRequest httpRequest = ((ServletWebRequest) request).getRequest();
         String path = httpRequest.getRequestURI();
         String cid = getCorrelationId();
-        log.warn("400 Validation error: path={} msg={}", path, message);
-        ErrorResponse body = build(HttpStatus.BAD_REQUEST, "Bad request", message, path, cid);
-        return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
+        log.error("400 Validation error: path={} msg={}", path, message);
+
+        ErrorResponse response = ErrorResponse.builder()
+            .status(HttpStatus.BAD_REQUEST.value())
+            .error("Bad request")
+            .message(message)
+            .path(path)
+            .correlationId(cid)
+            .timestamp(Instant.now())
+            .build();
+
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(BadRequestException.class)
-    public ErrorResponse badRequest(BadRequestException e, HttpServletRequest request) {
+    public ResponseEntity<ErrorResponse> badRequest(BadRequestException e, HttpServletRequest request) {
         String cid = getCorrelationId();
         String path = request.getRequestURI();
-        log.warn("400 Bad Request: path={} msg={}", path, e.getMessage());
-        return build(HttpStatus.BAD_REQUEST, "Bad request", e.getMessage(), path, cid);
+        log.error("400 Bad Request: path={} msg={}", path, e.getMessage());
+
+        ErrorResponse response = ErrorResponse.builder()
+            .status(HttpStatus.BAD_REQUEST.value())
+            .error("Bad request")
+            .message(e.getMessage() != null ? e.getMessage() : "Bad request")
+            .path(path)
+            .correlationId(cid)
+            .timestamp(Instant.now())
+            .build();
+
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     @ExceptionHandler(UnauthorizedException.class)
-    public ErrorResponse unAuthorized(UnauthorizedException e, HttpServletRequest request) {
+    public ResponseEntity<ErrorResponse> unauthorized(UnauthorizedException e, HttpServletRequest request) {
         String cid = getCorrelationId();
         String path = request.getRequestURI();
-        log.warn("401 Unauthorized: path={} msg={}", path, e.getMessage());
-        return build(HttpStatus.UNAUTHORIZED, "Unauthorized", "Incorrect authentication info", path, cid);
+        log.error("401 Unauthorized: path={} msg={}", path, e.getMessage());
+
+        ErrorResponse response = ErrorResponse.builder()
+            .status(HttpStatus.UNAUTHORIZED.value())
+            .error("Unauthorized")
+            .message(e.getMessage() != null ? e.getMessage() : "Incorrect authentication info")
+            .path(path)
+            .correlationId(cid)
+            .timestamp(Instant.now())
+            .build();
+
+        return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
     }
 
     @ResponseStatus(HttpStatus.FORBIDDEN)
     @ExceptionHandler(ForbiddenException.class)
-    public ErrorResponse forbidden(ForbiddenException e, HttpServletRequest request) {
+    public ResponseEntity<ErrorResponse> forbidden(ForbiddenException e, HttpServletRequest request) {
         String cid = getCorrelationId();
         String path = request.getRequestURI();
-        log.warn("403 Forbidden: path={} msg={}", path, e.getMessage());
-        return build(HttpStatus.FORBIDDEN, "Forbidden", "Not allowed", path, cid);
+        log.error("403 Forbidden: path={} msg={}", path, e.getMessage());
+
+        ErrorResponse response = ErrorResponse.builder()
+            .status(HttpStatus.FORBIDDEN.value())
+            .error("Forbidden")
+            .message(e.getMessage() != null ? e.getMessage() : "Not allowed")
+            .path(path)
+            .correlationId(cid)
+            .timestamp(Instant.now())
+            .build();
+
+        return new ResponseEntity<>(response, HttpStatus.FORBIDDEN);
     }
 
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler(NotFoundException.class)
-    public ErrorResponse notFound(NotFoundException e, HttpServletRequest request) {
+    public ResponseEntity<ErrorResponse> notFound(NotFoundException e, HttpServletRequest request) {
         String cid = getCorrelationId();
         String path = request.getRequestURI();
-        log.warn("404 Not Found: path={} msg={}", path, e.getMessage());
-        return build(HttpStatus.NOT_FOUND, "Not found", e.getMessage(), path, cid);
+        log.error("404 Not Found: path={} msg={}", path, e.getMessage());
+
+        ErrorResponse response = ErrorResponse.builder()
+            .status(HttpStatus.NOT_FOUND.value())
+            .error("Not found")
+            .message(e.getMessage() != null ? e.getMessage() : "Not found")
+            .path(path)
+            .correlationId(cid)
+            .timestamp(Instant.now())
+            .build();
+
+        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
     }
 
     @ResponseStatus(HttpStatus.CONFLICT)
     @ExceptionHandler(ConflictException.class)
-    public ErrorResponse conflict(ConflictException e, HttpServletRequest request) {
+    public ResponseEntity<ErrorResponse> conflict(ConflictException e, HttpServletRequest request) {
         String cid = getCorrelationId();
         String path = request.getRequestURI();
-        log.warn("409 Conflict: path={} msg={}", path, e.getMessage());
-        return build(HttpStatus.CONFLICT, "Conflict", "Data already exists", path, cid);
+        log.error("409 Conflict: path={} msg={}", path, e.getMessage());
+
+        ErrorResponse response = ErrorResponse.builder()
+            .status(HttpStatus.CONFLICT.value())
+            .error("Conflict")
+            .message(e.getMessage() != null ? e.getMessage() : "Data already exists")
+            .path(path)
+            .correlationId(cid)
+            .timestamp(Instant.now())
+            .build();
+
+        return new ResponseEntity<>(response, HttpStatus.CONFLICT);
     }
 
     
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(Exception.class)
-    public ErrorResponse serverError(Exception e, HttpServletRequest request) {
+    public ResponseEntity<ErrorResponse> serverError(Exception e, HttpServletRequest request) {
         String cid = getCorrelationId();
         String path = request.getRequestURI();
         log.error("500 Internal Server Error: path={}", path, e);
-        return build(HttpStatus.INTERNAL_SERVER_ERROR, "Internal server error", "Internal server error", path, cid);
-    }
 
-    private ErrorResponse build(HttpStatus status, String error, String message, String path, String correlationId) {
-        ErrorResponse response = new ErrorResponse();
-        response.setStatus(status.value());
-        response.setError(error);
-        response.setMessage(message);
-        response.setPath(path);
-        response.setCorrelationId(correlationId);
-        response.setTimestamp(Instant.now());
-        return response;
+        ErrorResponse response = ErrorResponse.builder()
+            .status(HttpStatus.INTERNAL_SERVER_ERROR.value())
+            .error("Internal server error")
+            .message(e.getMessage() != null ? e.getMessage() : "Internal server error")
+            .path(path)
+            .correlationId(cid)
+            .timestamp(Instant.now())
+            .build();
+
+        return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     private String getCorrelationId() {
