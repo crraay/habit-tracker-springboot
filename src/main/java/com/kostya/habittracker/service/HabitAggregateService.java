@@ -14,6 +14,8 @@ public interface HabitAggregateService {
 	void applyUntrack(Habit habit, LocalDate date);
 
 	void recomputeAggregate(Habit habit);
+
+	void resetStreaksForUncheckedHabits(LocalDate today);
 }
 
 
