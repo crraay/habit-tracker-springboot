@@ -138,6 +138,19 @@ public class HabitAggregateServiceImpl implements HabitAggregateService {
 
 		this.habitAggregateRepository.save(aggregate);
 	}
+
+	@Override
+	@Transactional
+	public void resetStreaksForUncheckedHabits(LocalDate today) {
+		List<HabitAggregate> aggregatesToReset = this.habitAggregateRepository
+				.findAggregatesNeedingStreakReset(today);
+
+		for (HabitAggregate aggregate : aggregatesToReset) {
+			aggregate.setCurrentStreak(0);
+			aggregate.setStreakStartDate(null);
+			this.habitAggregateRepository.save(aggregate);
+		}
+	}
 }
 
 
