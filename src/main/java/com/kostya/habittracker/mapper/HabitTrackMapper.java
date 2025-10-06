@@ -21,6 +21,7 @@ public class HabitTrackMapper {
 		response.setHabitId(habit.getId());
 		response.setHabitName(habit.getName());
 		response.setAggregate(habitAggregateMapper.toResponse(habit.getAggregate()));
+		response.setIconUrl(habit.getIcon() != null ? habit.getIcon().getS3Url() : null);
 		response.setStatus(status);
 		return response;
 	}

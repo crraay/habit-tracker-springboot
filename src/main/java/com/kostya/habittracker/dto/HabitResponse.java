@@ -13,4 +13,8 @@ public class HabitResponse {
 	String name;
 
 	HabitAggregateResponse aggregate;
+
+	Integer iconId;
+
+	String iconUrl;
 }

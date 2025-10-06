@@ -47,6 +47,7 @@ public class HabitStatisticsServiceImpl implements HabitStatisticsService {
         // Map all user habits to statistics, including those with zero completions
         return userHabits.stream()
             .map(habit -> {
+                // TODO move to mapper
                 HabitStatRequest stats = new HabitStatRequest();
                 stats.setHabitId(habit.getId());
                 stats.setHabitName(habit.getName());
@@ -61,6 +62,7 @@ public class HabitStatisticsServiceImpl implements HabitStatisticsService {
                     ar.setLastCheckInDate(habit.getAggregate().getLastCheckInDate());
                     stats.setAggregate(ar);
                 }
+                stats.setIconUrl(habit.getIcon() != null ? habit.getIcon().getS3Url() : null);
                 return stats;
             })
             .collect(Collectors.toList());
