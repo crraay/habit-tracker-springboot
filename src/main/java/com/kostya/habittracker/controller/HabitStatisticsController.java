@@ -12,7 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import com.kostya.habittracker.annotation.LogExecution;
-import com.kostya.habittracker.dto.HabitStatRequest;
+import com.kostya.habittracker.dto.HabitStatResponse;
 import com.kostya.habittracker.model.UserDetails;
 import com.kostya.habittracker.service.HabitStatisticsService;
 
@@ -30,13 +30,13 @@ public class HabitStatisticsController {
     private HabitStatisticsService habitStatisticsService;
 
     @GetMapping("/{startDate}/{endDate}")
-    ResponseEntity<List<HabitStatRequest>> getAggregatedData(
+    ResponseEntity<List<HabitStatResponse>> getAggregatedData(
         @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
         @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
         @AuthenticationPrincipal UserDetails userDetails
     ) {
 
-        List<HabitStatRequest> body = this.habitStatisticsService.getAggregatedData(startDate, endDate, userDetails.getUser());
+        List<HabitStatResponse> body = this.habitStatisticsService.getAggregatedData(startDate, endDate, userDetails.getUser());
         return ResponseEntity.ok(body);
     }
 }

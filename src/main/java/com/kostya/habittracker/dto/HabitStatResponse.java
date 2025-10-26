@@ -3,7 +3,7 @@ package com.kostya.habittracker.dto;
 import lombok.Data;
 
 @Data
-public class HabitStatRequest {
+public class HabitStatResponse {
 
     private Integer habitId;
 
