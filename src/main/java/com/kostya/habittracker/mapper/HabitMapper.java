@@ -2,7 +2,6 @@ package com.kostya.habittracker.mapper;
 
 import org.springframework.stereotype.Component;
 
-import com.kostya.habittracker.dto.HabitAggregateResponse;
 import com.kostya.habittracker.dto.HabitRequest;
 import com.kostya.habittracker.dto.HabitResponse;
 import com.kostya.habittracker.entity.Habit;
@@ -20,14 +19,13 @@ public class HabitMapper {
 		if (entity == null) {
 			return null;
 		}
-		HabitResponse response = new HabitResponse();
-		response.setId(entity.getId());
-		response.setName(entity.getName());
-		HabitAggregateResponse ar = habitAggregateMapper.toResponse(entity.getAggregate());
-		response.setAggregate(ar);
-		response.setIconId(entity.getIcon() != null ? entity.getIcon().getId() : null);
-		response.setIconUrl(entity.getIcon() != null ? entity.getIcon().getS3Url() : null);
-		return response;
+		return HabitResponse.builder()
+			.id(entity.getId())
+			.name(entity.getName())
+			.aggregate(habitAggregateMapper.toResponse(entity.getAggregate()))
+			.iconId(entity.getIcon() != null ? entity.getIcon().getId() : null)
+			.iconUrl(entity.getIcon() != null ? entity.getIcon().getS3Url() : null)
+			.build();
 	}
 
 	public Habit toEntity(HabitRequest request) {

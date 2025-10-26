@@ -1,21 +1,19 @@
 package com.kostya.habittracker.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
 
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
+@Getter
+@Builder
 public class HabitTrackResponse {
     
-    Integer habitId;
+    private final Integer habitId;
 
-    String habitName;
+    private final String habitName;
 
-    HabitAggregateResponse aggregate;
+    private final HabitAggregateResponse aggregate;
 
-    String iconUrl;
+    private final String iconUrl;
 
-    Boolean status;
+    private final Boolean status;
 }

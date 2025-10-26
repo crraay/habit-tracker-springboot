@@ -13,12 +13,12 @@ public class HabitAggregateMapper {
 		if (aggregate == null) {
 			return null;
 		}
-		HabitAggregateResponse response = new HabitAggregateResponse();
-		response.setTotalCheckIns(aggregate.getTotalCheckIns());
-		response.setCurrentStreak(aggregate.getCurrentStreak());
-		response.setBestStreak(aggregate.getBestStreak());
-		response.setStreakStartDate(aggregate.getStreakStartDate());
-		response.setLastCheckInDate(aggregate.getLastCheckInDate());
-		return response;
+		return HabitAggregateResponse.builder()
+			.totalCheckIns(aggregate.getTotalCheckIns())
+			.currentStreak(aggregate.getCurrentStreak())
+			.bestStreak(aggregate.getBestStreak())
+			.streakStartDate(aggregate.getStreakStartDate())
+			.lastCheckInDate(aggregate.getLastCheckInDate())
+			.build();
 	}
 }

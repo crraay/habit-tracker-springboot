@@ -18,14 +18,13 @@ public class HabitStatisticsMapper {
             return null;
         }
         
-        HabitStatResponse stats = new HabitStatResponse();
-        stats.setHabitId(habit.getId());
-        stats.setHabitName(habit.getName());
-        stats.setDone(completionCount.intValue());
-        stats.setOf(totalDays);
-        stats.setAggregate(habitAggregateMapper.toResponse(habit.getAggregate()));
-        stats.setIconUrl(habit.getIcon() != null ? habit.getIcon().getS3Url() : null);
-        
-        return stats;
+        return HabitStatResponse.builder()
+            .habitId(habit.getId())
+            .habitName(habit.getName())
+            .done(completionCount.intValue())
+            .of(totalDays)
+            .aggregate(habitAggregateMapper.toResponse(habit.getAggregate()))
+            .iconUrl(habit.getIcon() != null ? habit.getIcon().getS3Url() : null)
+            .build();
     }
 }

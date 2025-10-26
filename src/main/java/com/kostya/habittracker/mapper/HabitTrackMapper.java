@@ -17,12 +17,12 @@ public class HabitTrackMapper {
 		if (habit == null) {
 			return null;
 		}
-		HabitTrackResponse response = new HabitTrackResponse();
-		response.setHabitId(habit.getId());
-		response.setHabitName(habit.getName());
-		response.setAggregate(habitAggregateMapper.toResponse(habit.getAggregate()));
-		response.setIconUrl(habit.getIcon() != null ? habit.getIcon().getS3Url() : null);
-		response.setStatus(status);
-		return response;
+		return HabitTrackResponse.builder()
+			.habitId(habit.getId())
+			.habitName(habit.getName())
+			.aggregate(habitAggregateMapper.toResponse(habit.getAggregate()))
+			.iconUrl(habit.getIcon() != null ? habit.getIcon().getS3Url() : null)
+			.status(status)
+			.build();
 	}
 }

@@ -8,7 +8,7 @@ import com.kostya.habittracker.entity.HabitIcon;
 @Component
 public class HabitIconMapper {
     
-    public HabitIconDTO toDTO(HabitIcon entity) {
+    public HabitIconDTO toResponse(HabitIcon entity) {
         return HabitIconDTO.builder()
             .id(entity.getId())
             .name(entity.getName())

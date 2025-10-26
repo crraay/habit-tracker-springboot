@@ -1,20 +1,19 @@
 package com.kostya.habittracker.dto;
 
-import jakarta.validation.constraints.NotBlank;
-import lombok.Data;
+import lombok.Builder;
+import lombok.Getter;
 
-@Data
+@Getter
+@Builder
 public class HabitResponse {
 
-	@NotBlank
-	Integer id;
+	private final Integer id;
 	
-	@NotBlank
-	String name;
+	private final String name;
 
-	HabitAggregateResponse aggregate;
+	private final HabitAggregateResponse aggregate;
 
-	Integer iconId;
+	private final Integer iconId;
 
-	String iconUrl;
+	private final String iconUrl;
 }

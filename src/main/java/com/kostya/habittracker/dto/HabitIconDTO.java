@@ -7,9 +7,9 @@ import lombok.Getter;
 @Builder
 public class HabitIconDTO {
     
-    private Integer id;
-    private String name;
-    private String description;
-    private String s3Url;
-    private Boolean isActive;
+    private final Integer id;
+    private final String name;
+    private final String description;
+    private final String s3Url;
+    private final Boolean isActive;
 }
