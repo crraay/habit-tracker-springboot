@@ -1,13 +1,13 @@
 package com.kostya.habittracker.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Builder;
+import lombok.Getter;
 
-@Data
-@AllArgsConstructor
+@Getter
+@Builder
 public class LoginResponse {
     
-    String token;
+    private final String token;
 
-    Integer tokenExpiresIn;
+    private final Integer tokenExpiresIn;
 }

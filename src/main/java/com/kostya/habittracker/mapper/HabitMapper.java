@@ -2,9 +2,7 @@ package com.kostya.habittracker.mapper;
 
 import org.springframework.stereotype.Component;
 
-import com.kostya.habittracker.dto.HabitAggregateResponse;
-import com.kostya.habittracker.dto.HabitRequest;
-import com.kostya.habittracker.dto.HabitResponse;
+import com.kostya.habittracker.dto.HabitDTO;
 import com.kostya.habittracker.entity.Habit;
 import com.kostya.habittracker.entity.HabitIcon;
 
@@ -16,28 +14,27 @@ public class HabitMapper {
 
 	private final HabitAggregateMapper habitAggregateMapper;
 
-	public HabitResponse toResponse(Habit entity) {
+	public HabitDTO toDTO(Habit entity) {
 		if (entity == null) {
 			return null;
 		}
-		HabitResponse response = new HabitResponse();
-		response.setId(entity.getId());
-		response.setName(entity.getName());
-		HabitAggregateResponse ar = habitAggregateMapper.toResponse(entity.getAggregate());
-		response.setAggregate(ar);
-		response.setIconId(entity.getIcon() != null ? entity.getIcon().getId() : null);
-		response.setIconUrl(entity.getIcon() != null ? entity.getIcon().getS3Url() : null);
-		return response;
+		return HabitDTO.builder()
+			.id(entity.getId())
+			.name(entity.getName())
+			.aggregate(habitAggregateMapper.toResponse(entity.getAggregate()))
+			.iconId(entity.getIcon() != null ? entity.getIcon().getId() : null)
+			.iconUrl(entity.getIcon() != null ? entity.getIcon().getS3Url() : null)
+			.build();
 	}
 
-	public Habit toEntity(HabitRequest request) {
+	public Habit toEntity(HabitDTO dto) {
 		Habit entity = new Habit();
-		entity.setName(request.getName());
+		entity.setName(dto.getName());
 		
 		// handle icon
-		if (request.getIconId() != null) {
+		if (dto.getIconId() != null) {
 			HabitIcon ref = new HabitIcon();
-			ref.setId(request.getIconId());
+			ref.setId(dto.getIconId());
 			entity.setIcon(ref);
 		} else {
 			entity.setIcon(null);
@@ -46,8 +43,8 @@ public class HabitMapper {
 		return entity;
 	}
 
-	public Habit toEntity(Integer id, HabitRequest request) {
-		Habit entity = toEntity(request);
+	public Habit toEntity(Integer id, HabitDTO dto) {
+		Habit entity = toEntity(dto);
 		entity.setId(id);
 		return entity;
 	}

@@ -23,7 +23,7 @@ public class HabitIconServiceImpl implements HabitIconService {
     @Override
     public List<HabitIconDTO> getAll() {
         return habitIconRepository.findAll().stream()
-            .map(habitIconMapper::toDTO)
+            .map(habitIconMapper::toResponse)
             .collect(Collectors.toList());
     }
 }

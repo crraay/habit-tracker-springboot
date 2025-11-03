@@ -2,22 +2,20 @@ package com.kostya.habittracker.dto;
 
 import java.time.LocalDate;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
 
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
+@Getter
+@Builder
 public class HabitAggregateResponse {
     
-    private Integer totalCheckIns;
+    private final Integer totalCheckIns;
 
-    private Integer currentStreak;
+    private final Integer currentStreak;
 
-    private Integer bestStreak;
+    private final Integer bestStreak;
 
-    private LocalDate streakStartDate;
+    private final LocalDate streakStartDate;
 
-    private LocalDate lastCheckInDate;
+    private final LocalDate lastCheckInDate;
 }

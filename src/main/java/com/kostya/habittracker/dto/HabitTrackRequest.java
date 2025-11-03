@@ -2,17 +2,19 @@ package com.kostya.habittracker.dto;
 
 import java.time.LocalDate;
 
-import lombok.Data;
+import lombok.Builder;
+import lombok.Getter;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PastOrPresent;
 
-@Data
+@Getter
+@Builder
 public class HabitTrackRequest {
     
     @NotNull
-    Integer habitId;
+    private final Integer habitId;
 
     @NotNull
     @PastOrPresent
-    LocalDate date;
+    private final LocalDate date;
 }

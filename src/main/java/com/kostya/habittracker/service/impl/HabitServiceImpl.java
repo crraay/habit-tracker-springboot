@@ -6,8 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.kostya.habittracker.dto.HabitRequest;
-import com.kostya.habittracker.dto.HabitResponse;
+import com.kostya.habittracker.dto.HabitDTO;
 import com.kostya.habittracker.entity.Habit;
 import com.kostya.habittracker.entity.User;
 import com.kostya.habittracker.exception.NotFoundException;
@@ -25,39 +24,39 @@ public class HabitServiceImpl implements HabitService {
 	HabitMapper habitMapper;
 
 	@Override
-	public List<HabitResponse> getHabits(User user) {
+	public List<HabitDTO> getHabits(User user) {
 		List<Habit> entities = this.habitRepository.findAllByUserId(user.getId());
 		
-		List<HabitResponse> result = new ArrayList<>();
+		List<HabitDTO> result = new ArrayList<>();
 		for (Habit entity: entities) {
-			result.add(habitMapper.toResponse(entity));
+			result.add(habitMapper.toDTO(entity));
 		}
 		
 		return result;
 	}
 
 	@Override
-	public HabitResponse getHabit(Integer id, User user) {
+	public HabitDTO getHabit(Integer id, User user) {
 		Habit entity = this.habitRepository.findWithAggregateByIdAndUserId(id, user.getId())
 			.orElseThrow(() -> new NotFoundException("Habit not found"));
 		
-		return habitMapper.toResponse(entity);
+		return habitMapper.toDTO(entity);
 	}
 
 	@Override
-	public HabitResponse createHabit(HabitRequest request, User user) {
-		Habit entity = habitMapper.toEntity(request);
+	public HabitDTO createHabit(HabitDTO dto, User user) {
+		Habit entity = habitMapper.toEntity(dto);
 		entity.setUser(user);
 		
-		return habitMapper.toResponse(this.habitRepository.save(entity));
+		return habitMapper.toDTO(this.habitRepository.save(entity));
 	}
 
 	@Override
-	public HabitResponse updateHabit(Integer id, HabitRequest request, User user) {
-		Habit entity = habitMapper.toEntity(id, request);
+	public HabitDTO updateHabit(Integer id, HabitDTO dto, User user) {
+		Habit entity = habitMapper.toEntity(id, dto);
 		entity.setUser(user);
 		
-		return habitMapper.toResponse(this.habitRepository.save(entity));
+		return habitMapper.toDTO(this.habitRepository.save(entity));
 	}
 
 	@Override

@@ -9,11 +9,11 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.kostya.habittracker.dto.HabitStatRequest;
-import com.kostya.habittracker.dto.HabitAggregateResponse;
+import com.kostya.habittracker.dto.HabitStatResponse;
 import com.kostya.habittracker.entity.Habit;
 import com.kostya.habittracker.entity.HabitLog;
 import com.kostya.habittracker.entity.User;
+import com.kostya.habittracker.mapper.HabitStatisticsMapper;
 import com.kostya.habittracker.repository.HabitLogRepository;
 import com.kostya.habittracker.repository.HabitRepository;
 import com.kostya.habittracker.service.HabitStatisticsService;
@@ -27,8 +27,11 @@ public class HabitStatisticsServiceImpl implements HabitStatisticsService {
     @Autowired
     private HabitRepository habitRepository;
 
+    @Autowired
+    private HabitStatisticsMapper habitStatisticsMapper;
+
     @Override
-    public List<HabitStatRequest> getAggregatedData(LocalDate startDate, LocalDate endDate, User currentUser) {
+    public List<HabitStatResponse> getAggregatedData(LocalDate startDate, LocalDate endDate, User currentUser) {
         long totalDays = ChronoUnit.DAYS.between(startDate, endDate) + 1;
         
         // Get all habits for the user
@@ -46,25 +49,11 @@ public class HabitStatisticsServiceImpl implements HabitStatisticsService {
 
         // Map all user habits to statistics, including those with zero completions
         return userHabits.stream()
-            .map(habit -> {
-                // TODO move to mapper
-                HabitStatRequest stats = new HabitStatRequest();
-                stats.setHabitId(habit.getId());
-                stats.setHabitName(habit.getName());
-                stats.setDone(habitCompletionCounts.getOrDefault(habit.getId(), 0L).intValue());
-                stats.setOf((int) totalDays);
-                HabitAggregateResponse ar = new HabitAggregateResponse();
-                if (habit.getAggregate() != null) {
-                    ar.setTotalCheckIns(habit.getAggregate().getTotalCheckIns());
-                    ar.setCurrentStreak(habit.getAggregate().getCurrentStreak());
-                    ar.setBestStreak(habit.getAggregate().getBestStreak());
-                    ar.setStreakStartDate(habit.getAggregate().getStreakStartDate());
-                    ar.setLastCheckInDate(habit.getAggregate().getLastCheckInDate());
-                    stats.setAggregate(ar);
-                }
-                stats.setIconUrl(habit.getIcon() != null ? habit.getIcon().getS3Url() : null);
-                return stats;
-            })
+            .map(habit -> habitStatisticsMapper.toStatResponse(
+                habit, 
+                habitCompletionCounts.getOrDefault(habit.getId(), 0L), 
+                (int) totalDays
+            ))
             .collect(Collectors.toList());
     }
 }

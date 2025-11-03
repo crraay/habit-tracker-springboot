@@ -9,15 +9,15 @@ import java.time.Instant;
 @Builder
 public class ErrorResponse {
 
-    Integer status;
+    private final Integer status;
 
-    String error;
+    private final String error;
 
-    String message;
+    private final String message;
 
-    String path;
+    private final String path;
 
-    String correlationId;
+    private final String correlationId;
 
-    Instant timestamp;
+    private final Instant timestamp;
 }

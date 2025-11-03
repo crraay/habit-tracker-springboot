@@ -67,7 +67,10 @@ public class AuthServiceImpl implements AuthService {
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
         
-        return new LoginResponse(token, this.TOKEN_EXPIRES_IN);
+        return LoginResponse.builder()
+            .token(token)
+            .tokenExpiresIn(this.TOKEN_EXPIRES_IN)
+            .build();
     }
     
 }
