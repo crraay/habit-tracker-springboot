@@ -6,6 +6,7 @@ import com.kostya.habittracker.dto.HabitAggregateResponse;
 import com.kostya.habittracker.dto.HabitRequest;
 import com.kostya.habittracker.dto.HabitResponse;
 import com.kostya.habittracker.entity.Habit;
+import com.kostya.habittracker.entity.HabitIcon;
 
 import lombok.RequiredArgsConstructor;
 
@@ -24,12 +25,24 @@ public class HabitMapper {
 		response.setName(entity.getName());
 		HabitAggregateResponse ar = habitAggregateMapper.toResponse(entity.getAggregate());
 		response.setAggregate(ar);
+		response.setIconId(entity.getIcon() != null ? entity.getIcon().getId() : null);
+		response.setIconUrl(entity.getIcon() != null ? entity.getIcon().getS3Url() : null);
 		return response;
 	}
 
 	public Habit toEntity(HabitRequest request) {
 		Habit entity = new Habit();
 		entity.setName(request.getName());
+		
+		// handle icon
+		if (request.getIconId() != null) {
+			HabitIcon ref = new HabitIcon();
+			ref.setId(request.getIconId());
+			entity.setIcon(ref);
+		} else {
+			entity.setIcon(null);
+		}
+
 		return entity;
 	}
 

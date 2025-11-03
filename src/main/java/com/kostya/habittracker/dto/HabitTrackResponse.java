@@ -15,5 +15,7 @@ public class HabitTrackResponse {
 
     HabitAggregateResponse aggregate;
 
+    String iconUrl;
+
     Boolean status;
 }

@@ -10,4 +10,6 @@ public class HabitRequest {
 	@NotBlank
 	@Size(max = 100)
 	String name;
+
+	Integer iconId;
 }

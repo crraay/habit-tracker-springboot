@@ -14,4 +14,6 @@ public class HabitStatRequest {
     private Integer of;
 
     private HabitAggregateResponse aggregate;
+
+    private String iconUrl;
 }

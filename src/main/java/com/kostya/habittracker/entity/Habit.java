@@ -16,10 +16,14 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.Index;
 
 @Data
 @Entity
-@Table
+@Table(name = "habit", indexes = {
+	@Index(name = "idx_habit_icon_id", columnList = "icon_id")
+})
 @EqualsAndHashCode(callSuper = true)
 public class Habit extends BasicAudit {
 
@@ -38,4 +42,8 @@ public class Habit extends BasicAudit {
 	@EqualsAndHashCode.Exclude
 	@ToString.Exclude
 	HabitAggregate aggregate;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "icon_id")
+	HabitIcon icon;
 }

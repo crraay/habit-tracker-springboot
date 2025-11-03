@@ -17,7 +17,7 @@ import org.hibernate.annotations.OnDeleteAction;
 
 @Data
 @Entity
-@Table(uniqueConstraints = {
+@Table(name = "habit_log", uniqueConstraints = {
     @UniqueConstraint(columnNames = {"habit_id", "date"})
 })
 @EqualsAndHashCode(callSuper = true)
