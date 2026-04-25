@@ -1,0 +1,14 @@
+---
+description: OpenAPI / Springdoc — bearer JWT scheme and controller documentation.
+globs:
+  - "src/**/config/OpenAPIConfig.java"
+  - "src/**/controller/**/*.java"
+alwaysApply: false
+---
+
+# OpenAPI (Springdoc)
+
+- Global OpenAPI bean is in `OpenAPIConfig`: JWT **bearer** scheme named `bearerAuth` with `SecurityRequirement` applied by default.
+- On controllers, use `@Tag` for grouping; add operation annotations (`@Operation`, `@ApiResponse`, etc.) when documenting new or public APIs.
+- Keep security scheme naming aligned with `OpenAPIConfig` if you add multiple schemes.
+- Default media type for API docs is JSON (`springdoc.default-produces-media-type` in properties).

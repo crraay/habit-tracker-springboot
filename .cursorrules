@@ -1,0 +1,4 @@
+# Legacy Cursor rules entry point
+#
+# Prefer versioned project rules in .cursor/rules/*.mdc (see Cursor Settings → Rules).
+# This file remains for compatibility; detailed guidance lives under .cursor/rules/.

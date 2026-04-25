@@ -1,0 +1,19 @@
+---
+description: Spring Security, JWT filter, CORS, and safe handling of credentials.
+globs:
+  - "src/**/config/WebSecurityConfig.java"
+  - "src/**/filter/JwtRequestFilter.java"
+  - "src/**/security/**/*.java"
+  - "src/**/util/JwtUtil.java"
+  - "src/**/service/impl/UserDetailsServiceImpl.java"
+  - "src/**/model/UserDetails.java"
+alwaysApply: false
+---
+
+# Security and JWT
+
+- Security is configured in `WebSecurityConfig`: stateless sessions, JWT filter before `UsernamePasswordAuthenticationFilter`, CORS from `cors.*` properties, CSRF disabled (API/JWT style).
+- Public paths include `/api/auth/**`, actuator health, Swagger UI, and `/v3/api-docs/**`; everything else is authenticated unless you intentionally extend permit rules.
+- JWT signing and parsing use `JwtUtil` and configuration from `jwt.*` properties. **Never** log the raw JWT, `jwt.secret`, or user passwords.
+- Custom handlers: `RestAuthenticationEntryPoint`, `RestAccessDeniedHandler` — keep JSON error shape consistent with the rest of the API when changing behavior.
+- When adding endpoints, update `authorizeHttpRequests` if the route should be public or use a different rule (e.g. role-based), and add tests with `spring-security-test` where appropriate.

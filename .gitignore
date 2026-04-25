@@ -32,9 +32,5 @@ build/
 ### VS Code ###
 .vscode/
 
-### Cursor ###
-.cursor/
-.cursorrules
-
 ### ignore non-default application.properties ###
 src/main/resources/application-*.properties

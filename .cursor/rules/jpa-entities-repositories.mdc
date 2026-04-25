@@ -1,0 +1,16 @@
+---
+description: JPA entities, repositories, transactions, and schema alignment with Flyway.
+globs:
+  - "src/**/entity/**/*.java"
+  - "src/**/repository/**/*.java"
+  - "src/**/config/JpaConfig.java"
+alwaysApply: false
+---
+
+# JPA entities and repositories
+
+- Entities extend `BasicAudit` where auditing fields apply; use `@Entity`, `@Table`, and explicit column constraints to match **Flyway** scripts under `src/main/resources/db/migration`.
+- IDs use `@GeneratedValue(strategy = GenerationType.IDENTITY)` where aligned with PostgreSQL serial/identity columns in migrations.
+- Prefer **lazy** associations unless a use case requires eager loading; watch for N+1 queries when adding new service methods.
+- Repositories are Spring Data interfaces in `repository`; keep method names idiomatic (`findBy...`). Add `@Query` only when needed for performance or complex conditions.
+- `spring.jpa.hibernate.ddl-auto` is **validate** in the main config — schema changes belong in Flyway, not ad-hoc Hibernate updates.

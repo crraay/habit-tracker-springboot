@@ -1,0 +1,14 @@
+---
+description: Habit Tracker backend — stack, commands, and secrets policy for agents.
+alwaysApply: true
+---
+
+# Project brief
+
+- **Stack:** Java 17, Spring Boot 3.5.x, Maven, Spring Web, Data JPA, Security, Validation, Flyway, PostgreSQL (runtime), H2 (tests), Springdoc OpenAPI, JJWT, Lombok.
+- **Base package:** `com.kostya.habittracker`.
+- **Run:** `mvn spring-boot:run` (default port from `application.properties`, often 5000 for Elastic Beanstalk).
+- **Test:** `mvn test` (uses `src/test/resources` with `test` profile where applicable).
+- **API docs (when running):** `/swagger-ui/index.html`, OpenAPI `/v3/api-docs`.
+- **Secrets:** Never commit real JWT secrets, DB passwords, or production URLs. `src/main/resources/application-*.properties` is gitignored except patterns you add; treat `application.properties` defaults as dev-only.
+- **Rules:** Detailed conventions live in sibling files under `.cursor/rules/` (controllers, security, JPA, Flyway, tests, OpenAPI, CI). Prefer those over guessing stack-specific behavior.

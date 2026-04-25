@@ -1,0 +1,13 @@
+---
+description: GitHub Actions workflows — JDK, Maven commands, and artifacts for this repo.
+globs:
+  - ".github/workflows/**/*.yml"
+alwaysApply: false
+---
+
+# GitHub Actions (CI)
+
+- Build workflow uses **Java 17** (Corretto), Maven cache, and runs from repo root with explicit `pom.xml`: `mvn -f pom.xml clean compile`, then `mvn -f pom.xml test`, then `mvn -f pom.xml package -DskipTests`.
+- Uploaded artifact: `target/habit-tracker-springboot-*.jar` with short retention — keep artifact path in sync with `artifactId` and `version` in `pom.xml` if they change.
+- When adding steps (lint, integration tests, coverage), keep JDK matrix aligned with `java.version` in the POM unless intentionally testing multiple versions.
+- `workflow_call` outputs are part of the reusable contract for deploy workflows — update callers if you rename jobs or outputs.

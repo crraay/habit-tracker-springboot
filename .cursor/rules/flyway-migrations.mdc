@@ -1,0 +1,14 @@
+---
+description: Flyway SQL migrations — naming, ordering, PostgreSQL, and test compatibility.
+globs:
+  - "src/main/resources/db/migration/**/*.sql"
+alwaysApply: false
+---
+
+# Flyway migrations
+
+- Scripts live in `src/main/resources/db/migration/` with versioned names: `V{version}__description.sql` (e.g. `V1__init_schema.sql`).
+- Target **PostgreSQL** in production; tests use H2 — avoid PostgreSQL-only syntax unless the test profile provides equivalents or you document required test changes.
+- Prefer additive changes and careful data backfills; destructive drops need extra scrutiny and release notes.
+- Keep entity `@Table` / column names in sync with migration changes (`ddl-auto=validate` on main profile).
+- After adding a migration, run `mvn test` to ensure the test context still starts and migrations apply cleanly.

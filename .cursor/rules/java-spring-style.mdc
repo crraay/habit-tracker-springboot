@@ -1,0 +1,15 @@
+---
+description: Java and Spring coding style for this codebase (packages, Lombok, DI, logging).
+globs:
+  - "src/**/*.java"
+alwaysApply: false
+---
+
+# Java and Spring style
+
+- Keep new code under `com.kostya.habittracker` and mirror existing packages: `controller`, `service` / `service.impl`, `repository`, `entity`, `dto`, `mapper`, `config`, `security`, `filter`, `exception`, `enums`, `aspect`, `scheduled`, `util`, `model`, `annotation`.
+- **Dependency injection:** Prefer constructor injection for new classes. The codebase still uses `@Autowired` on fields in places; prefer migrating to constructor injection when touching a class substantially.
+- **Lombok:** `@Data` and related annotations are used on entities/DTOs; keep Lombok consistent with neighboring types. Do not add Lombok to types that do not already follow that pattern without a good reason.
+- **Logging:** Use SLF4J (`LoggerFactory.getLogger`). Avoid logging passwords, JWTs, or full authorization headers.
+- **Validation:** Use Jakarta Bean Validation (`jakarta.validation`) on DTOs where input is accepted from HTTP.
+- **Immutability:** Prefer clear DTOs for API boundaries; avoid exposing JPA entities directly from controllers unless the file already does so consistently.

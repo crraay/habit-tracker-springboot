@@ -1,0 +1,14 @@
+---
+description: Spring Boot tests — profiles, context loads, security, and in-memory DB.
+globs:
+  - "src/test/**/*.java"
+alwaysApply: false
+---
+
+# Testing
+
+- Use JUnit 5 and Spring Boot Test (`spring-boot-starter-test`). Default integration smoke test uses `@SpringBootTest` and `@ActiveProfiles("test")`.
+- H2 is available in the test scope; align `spring.datasource` / JPA settings in test resources with how the project already runs tests.
+- For secured endpoints, use `spring-security-test` (`@WithMockUser`, `MockMvc`, etc.) following patterns consistent with existing tests when you add them.
+- Prefer focused tests for new behavior (slice tests or `@WebMvcTest`) when they reduce flakiness and runtime; use full context only when necessary.
+- CI runs `mvn -f pom.xml test` after `clean compile` — keep the test suite green before merging.

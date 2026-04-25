@@ -1,0 +1,15 @@
+---
+description: REST controller conventions — mapping, DTOs, responses, Swagger tags.
+globs:
+  - "src/**/controller/**/*.java"
+alwaysApply: false
+---
+
+# REST controllers
+
+- Controllers live in `...controller`, use `@RestController`, and map under `/api/...` (see existing `AuthController`, `HabitController`, etc.).
+- Accept request bodies with `@Valid` on DTOs; return `ResponseEntity` when status or headers matter.
+- Use **DTOs** in API contracts; map to/from entities via existing **mapper** classes in `mapper` where the project already uses that pattern.
+- Use `@Tag` from `io.swagger.v3.oas.annotations.tags.Tag` for Swagger grouping (e.g. `@Tag(name = "auth")`).
+- Reuse project exceptions (`NotFoundException`, `BadRequestException`, etc.) so `GlobalExceptionHandler` produces consistent JSON (`ErrorResponse`).
+- Apply `@LogExecution` on controllers when adding new endpoints if that matches neighboring controllers in the same area.

@@ -1,0 +1,15 @@
+---
+description: Spring Boot configuration — profiles, env vars, and tracked vs ignored property files.
+globs:
+  - "src/main/resources/application.properties"
+  - "src/main/resources/application.yml"
+  - "src/test/resources/**"
+alwaysApply: false
+---
+
+# Application configuration
+
+- Main defaults live in `src/main/resources/application.properties` (committed). Override secrets and environment-specific values via **environment variables** (e.g. `JWT_SECRET`, `DATABASE_URL`, `CORS_ALLOWED_ORIGINS`) — do not commit production secrets.
+- Files matching `src/main/resources/application-*.properties` are **gitignored** by design; use them locally or in deployment, not as the only place critical defaults exist unless documented.
+- Test configuration lives under `src/test/resources` (e.g. `application-test.properties` if present); integration tests use `@ActiveProfiles("test")` where applicable.
+- Flyway flags (`spring.flyway.*`) and JWT/CORS settings must remain consistent with `WebSecurityConfig` and deployment docs when you change them.
