@@ -23,9 +23,11 @@ Example:
 2. From this directory: `docker compose up -d --build`.
 3. App: frontend on port **80**, API via `/api/` through nginx to the backend.
 
-## GitHub Actions secrets
+## GitHub Actions secrets and variables
 
 Configure in the backend repo: **Settings → Secrets and variables → Actions**.
+
+### Secrets
 
 | Secret | Purpose |
 |--------|--------|
@@ -33,10 +35,21 @@ Configure in the backend repo: **Settings → Secrets and variables → Actions*
 | `SERVER_USER` | SSH user (must be able to run `docker compose` — typically in the `docker` group) |
 | `SERVER_PASSWORD` | SSH password for that user |
 
-Optional:
+### Variables (optional)
 
-- Non-default SSH port: edit [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml) `port:` (default `22`).
-- Strict host keys: see [appleboy/ssh-action](https://github.com/appleboy/ssh-action) options such as `key` / fingerprint-related inputs if you add a known-hosts secret.
+Use **Variables** (not secrets) when your paths on the server differ from the defaults.
+
+| Variable | Default | Purpose |
+|----------|---------|--------|
+| `DEPLOY_BACKEND_DIR` | `/app/habit-tracker-springboot` | Absolute path to the **backend** git clone (must contain `docker-compose.yml`) |
+| `DEPLOY_FRONTEND_DIR` | `/app/habit-tracker-angular` | Absolute path to the **frontend** git clone (sibling of backend per `docker-compose.yml`) |
+| `SERVER_SSH_PORT` | `22` | SSH port |
+
+If deploy fails with **`No such file or directory`** on `cd`, the clone is not at the default path: either create those directories (see below) or set `DEPLOY_BACKEND_DIR` / `DEPLOY_FRONTEND_DIR` to match where you actually cloned the repos (e.g. `/home/deploy/habit-tracker-springboot`).
+
+**Note:** [appleboy/ssh-action](https://github.com/appleboy/ssh-action) v1.2.x does not support a `script_stop` input; the workflow uses `set -euo pipefail` in the remote script instead.
+
+Optional hardening: strict host keys — see the ssh-action README (`fingerprint`, `key`, etc.).
 
 The workflow runs `mvn -B -DskipTests package` before SSH so a broken backend build never triggers a deploy.
 

@@ -32,14 +32,25 @@ jobs:
           host: ${{ secrets.SERVER_HOST }}
           username: ${{ secrets.SERVER_USER }}
           password: ${{ secrets.SERVER_PASSWORD }}
-          port: 22
-          script_stop: true
+          port: ${{ vars.SERVER_SSH_PORT || 22 }}
           script: |
-            set -e
-            cd /app/habit-tracker-springboot
+            set -euo pipefail
+            BACKEND_DIR='${{ vars.DEPLOY_BACKEND_DIR || '/app/habit-tracker-springboot' }}'
+            FRONTEND_DIR='${{ vars.DEPLOY_FRONTEND_DIR || '/app/habit-tracker-angular' }}'
+            if [ ! -d "$BACKEND_DIR" ]; then
+              echo "ERROR: backend directory not found: $BACKEND_DIR"
+              echo "Create it (see DOCKER.md) or set repo variable DEPLOY_BACKEND_DIR to your clone path."
+              exit 1
+            fi
+            if [ ! -d "$FRONTEND_DIR" ]; then
+              echo "ERROR: frontend directory not found: $FRONTEND_DIR"
+              echo "Clone the Angular repo there or set DEPLOY_FRONTEND_DIR."
+              exit 1
+            fi
+            cd "$BACKEND_DIR"
             git pull --ff-only
-            cd /app/habit-tracker-angular
+            cd "$FRONTEND_DIR"
             git pull --ff-only
-            cd /app/habit-tracker-springboot
+            cd "$BACKEND_DIR"
             docker compose build backend frontend
             docker compose up -d --no-deps backend frontend
