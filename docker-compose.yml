@@ -42,6 +42,9 @@ services:
   frontend:
     build:
       context: ../habit-tracker-angular
+      args:
+        # Lower on tiny droplets if `ng build` is killed with exit 137 (see DOCKER.md). Default matches Dockerfile.
+        NODE_MEMORY_LIMIT: ${FRONTEND_NODE_MEMORY_LIMIT:-1536}
     ports:
       - "80:80"
     depends_on:

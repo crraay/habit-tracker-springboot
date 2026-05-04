@@ -104,6 +104,17 @@ The [deploy workflow](.github/workflows/deploy.yml) tries **`docker compose` fir
 
 ## Troubleshooting
 
+- **`ng build` / frontend image: `Killed` or exit code `137`:** the Node process was almost always stopped by the **Linux OOM killer** (out of RAM) on a small droplet. **Fix:** add **swap** (example below), **resize** the droplet to ≥2GB RAM, and/or set **`FRONTEND_NODE_MEMORY_LIMIT`** in `.env` (e.g. `768`) so the Angular Dockerfile’s `NODE_OPTIONS=--max-old-space-size=…` stays within what the host can provide. Building images in GitHub Actions and pulling on the server avoids heavy builds on the VPS.
+
+  ```bash
+  sudo fallocate -l 2G /swapfile
+  sudo chmod 600 /swapfile
+  sudo mkswap /swapfile
+  sudo swapon /swapfile
+  grep -q /swapfile /etc/fstab || echo '/swapfile none swap sw 0 0' | sudo tee -a /etc/fstab
+  free -h
+  ```
+
 - **Backend fails healthcheck / DB connection:** ensure `postgres` is healthy first; check `SPRING_DATASOURCE_*` matches the running Postgres instance and database name.
 - **Frontend 502** on `/api/`: confirm `backend` container is healthy and nginx proxies to `http://backend:8080` (see frontend `nginx.conf`).
 - **Compose can’t find frontend build context:** confirm `habit-tracker-angular` exists next to this repo with the expected folder name.
