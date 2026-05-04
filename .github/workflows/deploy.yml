@@ -52,5 +52,16 @@ jobs:
             cd "$FRONTEND_DIR"
             git pull --ff-only
             cd "$BACKEND_DIR"
-            docker compose build backend frontend
-            docker compose up -d --no-deps backend frontend
+            # Support Compose v2 plugin (`docker compose`) or legacy v1 (`docker-compose`).
+            if docker compose version >/dev/null 2>&1; then
+              docker compose build backend frontend
+              docker compose up -d --no-deps backend frontend
+            elif command -v docker-compose >/dev/null 2>&1; then
+              docker-compose build backend frontend
+              docker-compose up -d --no-deps backend frontend
+            else
+              echo "ERROR: Neither 'docker compose' nor 'docker-compose' is available."
+              echo "On Ubuntu/Debian: sudo apt-get install -y docker-compose-plugin"
+              echo "Or: sudo apt-get install -y docker-compose"
+              exit 1
+            fi

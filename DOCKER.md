@@ -53,9 +53,20 @@ Optional hardening: strict host keys — see the ssh-action README (`fingerprint
 
 The workflow runs `mvn -B -DskipTests package` before SSH so a broken backend build never triggers a deploy.
 
+## Compose CLI vs `docker-compose.yml`
+
+[`docker-compose.yml`](docker-compose.yml) only lives in the **git repo**. The machine still needs a **Compose implementation** on the PATH:
+
+- **Recommended:** Docker Compose **v2 plugin** → command is `docker compose` (after `sudo apt-get install -y docker-compose-plugin`).
+- **Legacy:** standalone **v1** → command is `docker-compose` (`sudo apt-get install -y docker-compose`).
+
+The [deploy workflow](.github/workflows/deploy.yml) tries **`docker compose` first**, then **`docker-compose`**, so either works once installed.
+
 ## Initial server setup (DigitalOcean droplet)
 
-1. **Install Docker Engine** and the **Docker Compose v2** plugin (`docker compose version`).
+1. **Install Docker Engine** and **Compose** (pick one):
+   - **Plugin (preferred):** `sudo apt-get install -y docker-compose-plugin` then verify `docker compose version`.
+   - **Or legacy:** `sudo apt-get install -y docker-compose` then verify `docker-compose version`.
 2. **Deploy user:** create a non-root user (e.g. `deploy`), add to group `docker`, use that user for SSH and for git/docker on the server.
 3. **Directories (two-repo layout, matches the default workflow):**
    - `sudo mkdir -p /app && sudo chown deploy:deploy /app`
@@ -82,7 +93,7 @@ The workflow runs `mvn -B -DskipTests package` before SSH so a broken backend bu
    docker compose up -d --no-deps backend frontend
    ```
 
-   This rebuilds only **backend** and **frontend**; the **postgres** container and the **named volume** `postgres_data` stay in place.
+   Use `docker-compose` instead of `docker compose` if you only installed the legacy v1 binary.
 
 ## Data safety (do not destroy the database volume)
 
