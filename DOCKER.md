@@ -44,6 +44,7 @@ Use **Variables** (not secrets) when your paths on the server differ from the de
 | `DEPLOY_BACKEND_DIR` | `/app/habit-tracker-springboot` | Absolute path to the **backend** git clone (must contain `docker-compose.yml`) |
 | `DEPLOY_FRONTEND_DIR` | `/app/habit-tracker-angular` | Absolute path to the **frontend** git clone (sibling of backend per `docker-compose.yml`) |
 | `SERVER_SSH_PORT` | `22` | SSH port |
+| `DEPLOY_SSH_COMMAND_TIMEOUT` | `45m` | Max time for the whole remote deploy script (`docker compose build` can be slow on small droplets). Use Go-style duration, e.g. `30m`, `1h`. |
 
 If deploy fails with **`No such file or directory`** on `cd`, the clone is not at the default path: either create those directories (see below) or set `DEPLOY_BACKEND_DIR` / `DEPLOY_FRONTEND_DIR` to match where you actually cloned the repos (e.g. `/home/deploy/habit-tracker-springboot`).
 

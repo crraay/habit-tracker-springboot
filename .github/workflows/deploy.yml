@@ -34,6 +34,8 @@ jobs:
           username: ${{ secrets.SERVER_USER }}
           password: ${{ secrets.SERVER_PASSWORD }}
           port: ${{ vars.SERVER_SSH_PORT || 22 }}
+          timeout: 2m
+          command_timeout: ${{ vars.DEPLOY_SSH_COMMAND_TIMEOUT || '45m' }}
           script: |
             set -euo pipefail
             BACKEND_DIR='${{ vars.DEPLOY_BACKEND_DIR || '/app/habit-tracker-springboot' }}'
