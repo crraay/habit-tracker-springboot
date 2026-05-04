@@ -83,7 +83,7 @@ The [deploy workflow](.github/workflows/deploy.yml) tries **`docker compose` fir
    docker compose up -d backend frontend
    ```
 
-7. **Later deploys:** push to `main` runs CI + SSH deploy, or manually:
+7. **Later deploys:** push to `main` runs CI + SSH deploy, or in GitHub go to **Actions → Deploy (Docker Compose) → Run workflow**, or run the same compose commands on the server:
 
    ```bash
    cd /app/habit-tracker-springboot && git pull --ff-only
