@@ -2,116 +2,122 @@
 
 ## Layout
 
-This repo’s [`docker-compose.yml`](docker-compose.yml) expects:
+This repo’s [`docker-compose.yml`](docker-compose.yml) orchestrates the full stack on the droplet:
 
-- **Backend**: pre-built image from Docker Hub (`docker.io/crraay/habit-tracker-springboot:latest`), pushed by the **`build-image`** workflow.
-- **Frontend**: sibling directory `../habit-tracker-angular` (clone the frontend repo next to this one on your machine or server); still built from source via Compose until an Angular Hub pipeline exists.
+- **Backend:** `docker.io/crraay/habit-tracker-springboot:latest` — built by **`build-image`** in this repo.
+- **Frontend:** `docker.io/crraay/habit-tracker-angular:latest` — built by **`build-image`** in [habit-tracker-angular](https://github.com/crraay/habit-tracker-angular).
 
-Example:
-
-```text
-/some/parent/
-  habit-tracker-springboot/    # this repo; contains docker-compose.yml and .env
-  habit-tracker-angular/       # frontend repo (sibling)
-```
-
-**Monorepo:** If both apps live under one root, adjust `frontend.build.context` and server paths accordingly.
+The server only needs **this repo clone** (compose + `.env`). No frontend source clone is required for deploy.
 
 ## Local quick start
 
-1. Copy env template: copy `.env.example` to `.env` in this directory and set real values (never commit `.env`).
-2. Pull or build the backend image:
-   - **Pull from Hub:** `docker pull docker.io/crraay/habit-tracker-springboot:latest`
-   - **Or build locally:** `docker build -t docker.io/crraay/habit-tracker-springboot:latest .`
-3. From this directory: `docker compose up -d --build` (frontend still builds; backend uses the image above).
-4. App: frontend on port **80**, API via `/api/` through nginx to the backend.
+1. Copy `.env.example` to `.env` and set real values.
+2. Pull or build both images:
 
-**Local backend development without Hub:** use a gitignored `docker-compose.override.yml` with `backend.build.context: .` if you prefer Compose to build the backend locally instead of pulling.
+   ```bash
+   docker pull docker.io/crraay/habit-tracker-springboot:latest
+   docker pull docker.io/crraay/habit-tracker-angular:latest
+   ```
+
+   Or build locally from each repo’s Dockerfile with the same tag names.
+
+3. `docker compose up -d`
+4. App on port **80**; API at **`/api/`** via nginx.
+
+**Local dev overrides:** gitignored `docker-compose.override.yml` with `build.context` for either service if you prefer Compose to build locally instead of pulling.
 
 ## CI/CD (Docker Hub + DigitalOcean)
 
-Two workflows in [`.github/workflows/`](.github/workflows/):
+Each app repo has its own **`build-image`** and **`deploy-image-digital-ocean`** workflows (same names; independent chains).
 
-| Workflow | File | Trigger | What it does |
-|----------|------|---------|--------------|
-| **`build-image`** | [`build-image.yml`](.github/workflows/build-image.yml) | Push to `main`, manual | Maven gate → `docker build` → push **`docker.io/crraay/habit-tracker-springboot:latest`** |
-| **`deploy-image-digital-ocean`** | [`deploy-image-digital-ocean.yml`](.github/workflows/deploy-image-digital-ocean.yml) | After **`build-image`** succeeds on `main`, manual | SSH to droplet → `git pull` → `docker compose pull backend` → `docker compose up -d backend` |
+### This repo (backend)
 
-Push to **`main`** chains: **`build-image`** → **`deploy-image-digital-ocean`**. Re-run deploy only via **Actions → deploy-image-digital-ocean → Run workflow**.
+| Workflow | Trigger | Action |
+|----------|---------|--------|
+| **`build-image`** | Push to `main`, manual | Maven → push **`docker.io/crraay/habit-tracker-springboot:latest`** |
+| **`deploy-image-digital-ocean`** | After **`build-image`** on `main`, manual | SSH → `git pull` → `compose pull/up backend` |
 
-Images are **public** on Docker Hub — the droplet does **not** need `docker login` to pull.
+### Frontend repo
+
+| Workflow | Trigger | Action |
+|----------|---------|--------|
+| **`build-image`** | Push to `main`, manual | `npm ci` → `test:ci` → push **`docker.io/crraay/habit-tracker-angular:latest`** |
+| **`deploy-image-digital-ocean`** | After **`build-image`** on `main`, manual | SSH → `git pull` here → `compose pull/up frontend` |
+
+You manage backend/frontend version matching manually (both use **`latest`**).
+
+Images are **public** on Docker Hub — no `docker login` on the droplet for pull.
 
 ## GitHub Actions secrets and variables
 
-Configure in the backend repo: **Settings → Secrets and variables → Actions**.
+### Backend repo secrets
 
-### Secrets
+| Secret | Used by |
+|--------|---------|
+| `DOCKER_HUB_USERNAME`, `DOCKER_HUB_TOKEN` | `build-image` |
+| `SERVER_HOST`, `SERVER_USER`, `SERVER_PASSWORD` | `deploy-image-digital-ocean` |
 
-| Secret | Used by | Purpose |
-|--------|---------|--------|
-| `DOCKER_HUB_USERNAME` | `build-image` | Docker Hub login |
-| `DOCKER_HUB_TOKEN` | `build-image` | Docker Hub access token (push) |
-| `SERVER_HOST` | `deploy-image-digital-ocean` | Droplet hostname or IP |
-| `SERVER_USER` | `deploy-image-digital-ocean` | SSH user (in `docker` group) |
-| `SERVER_PASSWORD` | `deploy-image-digital-ocean` | SSH password |
+### Frontend repo secrets
 
-### Variables (optional)
+Same names — configure in **habit-tracker-angular** for its deploy workflow.
+
+### Variables (optional, set in each repo that deploys)
 
 | Variable | Default | Purpose |
 |----------|---------|--------|
-| `DEPLOY_BACKEND_DIR` | `/app/habit-tracker-springboot` | Backend clone path on the droplet (must contain `docker-compose.yml` and `.env`) |
+| `DEPLOY_BACKEND_DIR` | `/app/habit-tracker-springboot` | Backend clone on droplet (`docker-compose.yml` + `.env`) |
 | `SERVER_SSH_PORT` | `22` | SSH port |
-| `DEPLOY_SSH_COMMAND_TIMEOUT` | `15m` | Max time for remote deploy script (pull + up only; no image build on VPS) |
+| `DEPLOY_SSH_COMMAND_TIMEOUT` | `15m` | Remote script timeout |
 
 ## Compose CLI vs `docker-compose.yml`
 
-The machine still needs **Docker Compose v2** (`docker compose`) or legacy **`docker-compose`** on the PATH. Deploy workflows try **`docker compose` first**, then **`docker-compose`**.
+Use **Docker Compose v2** (`docker compose`). **`docker-compose-plugin`** is not in Ubuntu default repos — add [Docker’s official repository](https://docs.docker.com/engine/install/ubuntu/) first:
+
+```bash
+sudo apt-get install -y ca-certificates curl
+sudo install -m 0755 -d /etc/apt/keyrings
+sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+sudo chmod a+r /etc/apt/keyrings/docker.asc
+echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+sudo apt-get update
+sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin
+docker compose version
+sudo usermod -aG docker YOUR_USER
+```
 
 ## Initial server setup (DigitalOcean droplet)
 
-1. **Install Docker Engine** and **Compose** (`sudo apt-get install -y docker-compose-plugin`; verify `docker compose version`).
-2. **Deploy user:** create a user, add to group `docker`.
-3. **Clone backend repo** (and frontend if you run the full stack with local frontend builds):
+1. Install Docker Engine + Compose v2 (above); ensure deploy user is in **`docker`** group and **`docker ps`** works without sudo.
+2. Clone **backend repo only:**
 
    ```bash
    sudo mkdir -p /app && sudo chown deploy:deploy /app
    git clone https://github.com/crraay/habit-tracker-springboot.git /app/habit-tracker-springboot
-   git clone https://github.com/crraay/habit-tracker-angular.git /app/habit-tracker-angular
    ```
 
-4. **Environment file:** copy `.env.example` to `/app/habit-tracker-springboot/.env` and set production values.
-5. **First start (Postgres + volume, then apps):**
+3. Copy `.env.example` to `.env`; set `POSTGRES_*`, `JWT_SECRET`, **`CORS_ALLOWED_ORIGINS`** (include your public URL, e.g. `http://YOUR_DROPLET_IP`).
+4. **First start:**
 
    ```bash
    cd /app/habit-tracker-springboot
-   docker compose pull backend
+   docker compose pull
    docker compose up -d postgres
    docker compose ps   # wait until postgres is healthy
    docker compose up -d backend frontend
    ```
 
-   Frontend may still **build on the server** until you migrate it to Docker Hub. On a **1GB** droplet, prefer building the frontend image in CI or locally and pushing to Hub later.
-
-6. **Later backend deploys:** automatic on push to `main`, or **Actions → deploy-image-digital-ocean → Run workflow**, or on the server:
-
-   ```bash
-   cd /app/habit-tracker-springboot
-   git pull --ff-only
-   docker compose pull backend
-   docker compose up -d backend
-   ```
+5. **Later deploys:** push to `main` in each repo (build → chained deploy), or run **deploy-image-digital-ocean** manually in GitHub Actions.
 
 ## Data safety (do not destroy the database volume)
 
-- Postgres data lives in the **named volume** `postgres_data` (`docker volume ls`).
-- **Never** on production: `docker compose down -v`, `docker volume rm postgres_data`, or `docker system prune --volumes`.
-- Backend deploy only **pulls** and **restarts** the `backend` service — Postgres is not rebuilt or removed.
+- Postgres data: named volume **`postgres_data`**.
+- **Never:** `docker compose down -v`, `docker volume rm`, `docker system prune --volumes`.
+- Service deploys only **pull** and **restart** `backend` or `frontend` — Postgres unchanged.
 
 ## Troubleshooting
 
-- **`ng build` / frontend: `Killed` or exit 137 on VPS:** OOM on small droplets. Add swap, build frontend in CI/Hub, or use a larger instance — see frontend repo when its Hub pipeline exists.
-- **Backend fails healthcheck / DB connection:** ensure `postgres` is healthy; check `SPRING_DATASOURCE_*` in `.env`.
-- **Frontend 502 on `/api/`:** confirm `backend` is healthy; nginx proxies to `http://backend:8080`.
-- **Deploy: directory not found:** set `DEPLOY_BACKEND_DIR` or clone to `/app/habit-tracker-springboot`.
-- **Deploy: `KeyError: ContainerConfig` during `docker-compose up`:** the droplet is using **legacy docker-compose v1** (e.g. 1.29.2), which breaks when recreating containers from images built with a newer Docker Engine. **Fix:** install Compose **v2**: `sudo apt-get install -y docker-compose-plugin` and verify `docker compose version`. The deploy workflow also **stops/removes** the old `backend` container before `up` as a workaround for v1.
-- **Pull fails for backend image:** confirm Hub repo `crraay/habit-tracker-springboot` is public and **`build-image`** has run at least once.
+- **Backend fails healthcheck:** ensure `postgres` is healthy; check `.env` datasource settings.
+- **Frontend 502 on `/api/`:** backend must be healthy; nginx proxies to `http://backend:8080`.
+- **Deploy: Cannot connect to Docker daemon:** user must be in `docker` group; `docker` service running.
+- **Deploy: `KeyError: ContainerConfig`:** legacy `docker-compose` v1 — install Compose v2 plugin; workflows stop/rm service before `up`.
+- **Pull fails:** run **`build-image`** in the relevant repo at least once; confirm Hub repos are public.

@@ -2,8 +2,8 @@
 # If you change POSTGRES_* after the first run, the old password may still be in the volume;
 # see "Troubleshooting" in DOCKER.md.
 #
-# Layout: backend uses Docker Hub image (see build-image workflow). Frontend still builds from
-# ../habit-tracker-angular — keep a sibling clone next to this directory.
+# Layout: backend and frontend use Docker Hub images (see build-image workflows in each repo).
+# Server needs only this repo clone (docker-compose.yml + .env); no frontend source clone required.
 services:
   postgres:
     image: postgres:16-alpine
@@ -38,8 +38,8 @@ services:
     restart: unless-stopped
 
   frontend:
-    build:
-      context: ../habit-tracker-angular
+    # Built and pushed by GitHub Actions workflow build-image in habit-tracker-angular (Docker Hub).
+    image: docker.io/crraay/habit-tracker-angular:latest
     ports:
       - "80:80"
     depends_on:
