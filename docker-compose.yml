@@ -2,10 +2,8 @@
 # If you change POSTGRES_* after the first run, the old password may still be in the volume;
 # see "Troubleshooting" in DOCKER.md.
 #
-# Layout: this file lives in the backend repo root. Build contexts use "." for the backend and
-# "../habit-tracker-angular" for the frontend — keep a sibling clone of habit-tracker-angular next
-# to this directory (same parent folder). For a single monorepo with both apps under one root,
-# use contexts "./habit-tracker-springboot" and "./habit-tracker-angular" instead.
+# Layout: backend uses Docker Hub image (see build-image workflow). Frontend still builds from
+# ../habit-tracker-angular — keep a sibling clone next to this directory.
 services:
   postgres:
     image: postgres:16-alpine
@@ -24,8 +22,8 @@ services:
     restart: unless-stopped
 
   backend:
-    build:
-      context: .
+    # Built and pushed by GitHub Actions workflow build-image (Docker Hub).
+    image: docker.io/crraay/habit-tracker-springboot:latest
     environment:
       SERVER_PORT: "8080"
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/${POSTGRES_DB:-habit_tracker}?currentSchema=public

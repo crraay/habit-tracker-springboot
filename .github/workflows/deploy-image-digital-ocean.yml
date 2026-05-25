@@ -1,7 +1,11 @@
-name: Deploy (Docker Compose)
+name: deploy-image-digital-ocean
 
 on:
-  push:
+  workflow_run:
+    workflows:
+      - build-image
+    types:
+      - completed
     branches:
       - main
   workflow_dispatch:
@@ -12,22 +16,10 @@ concurrency:
 
 jobs:
   deploy:
+    if: github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Set up JDK 17
-        uses: actions/setup-java@v4
-        with:
-          distribution: temurin
-          java-version: "17"
-          cache: maven
-
-      - name: Build backend with Maven
-        run: mvn -B -DskipTests package
-
-      - name: Deploy over SSH
+      - name: Deploy backend over SSH
         uses: appleboy/ssh-action@v1.2.2
         with:
           host: ${{ secrets.SERVER_HOST }}
@@ -35,36 +27,25 @@ jobs:
           password: ${{ secrets.SERVER_PASSWORD }}
           port: ${{ vars.SERVER_SSH_PORT || 22 }}
           timeout: 2m
-          command_timeout: ${{ vars.DEPLOY_SSH_COMMAND_TIMEOUT || '45m' }}
+          command_timeout: ${{ vars.DEPLOY_SSH_COMMAND_TIMEOUT || '15m' }}
           script: |
             set -euo pipefail
             BACKEND_DIR='${{ vars.DEPLOY_BACKEND_DIR || '/app/habit-tracker-springboot' }}'
-            FRONTEND_DIR='${{ vars.DEPLOY_FRONTEND_DIR || '/app/habit-tracker-angular' }}'
             if [ ! -d "$BACKEND_DIR" ]; then
               echo "ERROR: backend directory not found: $BACKEND_DIR"
               echo "Create it (see DOCKER.md) or set repo variable DEPLOY_BACKEND_DIR to your clone path."
               exit 1
             fi
-            if [ ! -d "$FRONTEND_DIR" ]; then
-              echo "ERROR: frontend directory not found: $FRONTEND_DIR"
-              echo "Clone the Angular repo there or set DEPLOY_FRONTEND_DIR."
-              exit 1
-            fi
             cd "$BACKEND_DIR"
             git pull --ff-only
-            cd "$FRONTEND_DIR"
-            git pull --ff-only
-            cd "$BACKEND_DIR"
-            # Support Compose v2 plugin (`docker compose`) or legacy v1 (`docker-compose`).
             if docker compose version >/dev/null 2>&1; then
-              docker compose build backend frontend
-              docker compose up -d --no-deps backend frontend
+              docker compose pull backend
+              docker compose up -d backend
             elif command -v docker-compose >/dev/null 2>&1; then
-              docker-compose build backend frontend
-              docker-compose up -d --no-deps backend frontend
+              docker-compose pull backend
+              docker-compose up -d backend
             else
               echo "ERROR: Neither 'docker compose' nor 'docker-compose' is available."
               echo "On Ubuntu/Debian: sudo apt-get install -y docker-compose-plugin"
-              echo "Or: sudo apt-get install -y docker-compose"
               exit 1
             fi
