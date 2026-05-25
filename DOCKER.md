@@ -113,4 +113,5 @@ The machine still needs **Docker Compose v2** (`docker compose`) or legacy **`do
 - **Backend fails healthcheck / DB connection:** ensure `postgres` is healthy; check `SPRING_DATASOURCE_*` in `.env`.
 - **Frontend 502 on `/api/`:** confirm `backend` is healthy; nginx proxies to `http://backend:8080`.
 - **Deploy: directory not found:** set `DEPLOY_BACKEND_DIR` or clone to `/app/habit-tracker-springboot`.
+- **Deploy: `KeyError: ContainerConfig` during `docker-compose up`:** the droplet is using **legacy docker-compose v1** (e.g. 1.29.2), which breaks when recreating containers from images built with a newer Docker Engine. **Fix:** install Compose **v2**: `sudo apt-get install -y docker-compose-plugin` and verify `docker compose version`. The deploy workflow also **stops/removes** the old `backend` container before `up` as a workaround for v1.
 - **Pull fails for backend image:** confirm Hub repo `crraay/habit-tracker-springboot` is public and **`build-image`** has run at least once.

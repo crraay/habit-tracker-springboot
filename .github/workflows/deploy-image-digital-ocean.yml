@@ -38,12 +38,20 @@ jobs:
             fi
             cd "$BACKEND_DIR"
             git pull --ff-only
+            deploy_backend() {
+              local compose="$1"
+              $compose pull backend
+              # docker-compose v1.29.x hits KeyError: ContainerConfig when recreating containers
+              # against newer Docker Engine images. Remove the old backend container first.
+              $compose stop backend 2>/dev/null || true
+              $compose rm -f backend 2>/dev/null || true
+              $compose up -d backend
+            }
             if docker compose version >/dev/null 2>&1; then
-              docker compose pull backend
-              docker compose up -d backend
+              deploy_backend "docker compose"
             elif command -v docker-compose >/dev/null 2>&1; then
-              docker-compose pull backend
-              docker-compose up -d backend
+              echo "WARNING: Using legacy docker-compose v1. Install docker-compose-plugin (Compose v2) to avoid recreate bugs."
+              deploy_backend "docker-compose"
             else
               echo "ERROR: Neither 'docker compose' nor 'docker-compose' is available."
               echo "On Ubuntu/Debian: sudo apt-get install -y docker-compose-plugin"
