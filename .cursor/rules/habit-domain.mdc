@@ -1,0 +1,16 @@
+---
+description: Habit domain contract — today, check-ins, streak, lifecycle. Backend is the source of truth.
+alwaysApply: true
+---
+
+# Habit domain
+
+Canonical law: [docs/domain.md](docs/domain.md).
+
+Before changing habits, check-ins, streaks, pause/archive/delete, timezone, or *today*:
+
+1. Read `docs/domain.md`.
+2. Do not invent a conflicting rule. If code and the contract disagree, stop and resolve the contract first.
+3. Backend enforces the contract. Tests that lock these invariants are the executable copy.
+
+v1 reminders: daily binary habits only; check-in window is today + yesterday in the user's timezone; pause/archive end the live streak without counting as misses; restore from archive goes to paused; hard delete removes the habit and all check-ins.

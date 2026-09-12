@@ -2,10 +2,17 @@
 
 This file gives coding agents and contributors quick, project-specific context. For user-facing setup, see [README.md](README.md).
 
+## Domain contract
+
+Canonical product/domain law: [docs/domain.md](docs/domain.md).
+
+Read it before changing habits, check-ins, streaks, pause/archive/delete, timezone, or the meaning of *today*. Use names from the Glossary in that file; do not invent a third synonym (`status` is not habit lifecycle and not “day done”). If implementation and that file disagree, stop and resolve the contract first — do not silently invent a new rule. Backend is the system of record; the Angular UI must follow the same law.
+
 ## What this repository is
 
 - **Backend** for a Habit Tracker app: REST API built with **Spring Boot** and **Java 17**.
-- **Client**: an Angular frontend exists elsewhere; this repo is API-only.
+- **Client**: sibling repo [habit-tracker-angular](https://github.com/crraay/habit-tracker-angular) (`../habit-tracker-angular`). This repo is API-only.
+- **Deploy**: [habit-tracker-compose](https://github.com/crraay/habit-tracker-compose) is the production path. See [DOCKER.md](DOCKER.md). Elastic Beanstalk (`.github/workflows/deploy-to-elastic-beanstalk.yml`) is **legacy** — do not extend or use it for new deploys.
 - **Group / package root**: `com.kostya.habittracker` (see `src/main/java`).
 
 ## Tech stack (high level)
@@ -48,10 +55,10 @@ On Windows, use `mvnw.cmd` if needed. CI compiles, tests, and packages via Maven
 
 Runtime settings live in `src/main/resources/application.properties`. **Do not** commit real production secrets. Common environment-driven values:
 
-- **Database**: `DATABASE_URL`, `DATABASE_USERNAME`, `DATABASE_PASSWORD` (defaults point at local PostgreSQL; adjust for your machine).
-- **JWT**: `JWT_SECRET` (required for meaningful auth in a real run).
-- **CORS**: `CORS_ALLOWED_ORIGINS` and related `cors.*` properties.
-- **Server**: `SERVER_PORT` (default in properties aligns with common Elastic Beanstalk use).
+- **Database**: `SPRING_DATASOURCE_URL`, `SPRING_DATASOURCE_USERNAME`, `SPRING_DATASOURCE_PASSWORD` (defaults point at local PostgreSQL `habit_tracker`).
+- **JWT**: `JWT_SECRET` (required; no default).
+- **CORS**: `CORS_ALLOWED_ORIGINS` (required; no default) and related `cors.*` properties.
+- **Server**: `SERVER_PORT` (default `8080`).
 - **Flyway**: `FLYWAY_*` flags as in `application.properties`.
 
 Test profile: `src/test/resources/application-test.properties` (H2, etc.).
@@ -66,4 +73,5 @@ Test profile: `src/test/resources/application-test.properties` (H2, etc.).
 ## Out of scope for this repo
 
 - Frontend (Angular) code and UI assets.
-- Unless explicitly requested, do not add unrelated refactors or large new docs beyond what the task needs.
+- Elastic Beanstalk (legacy). Do not extend `.github/workflows/deploy-to-elastic-beanstalk.yml`.
+- Unless explicitly requested, do not add unrelated refactors or large new docs beyond what the task needs. The exception is [docs/domain.md](docs/domain.md): keep it in sync when domain rules change.

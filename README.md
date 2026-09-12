@@ -1,60 +1,63 @@
 # Habit Tracker Backend
 
-This is the backend for the Habit Tracker web application, built using Spring Boot.
+REST API for the Habit Tracker app (Spring Boot, Java 17).
 
-## Overview
+v1 product/domain rules live in [docs/domain.md](docs/domain.md). That file is the source of truth; the API must enforce it.
 
-The backend provides RESTful APIs for managing habits, user data, and statistics. It is designed to work seamlessly with the Angular frontend.
+## Related repositories
+
+| Repo | Role |
+|------|------|
+| [habit-tracker-angular](https://github.com/crraay/habit-tracker-angular) | Frontend |
+| [habit-tracker-compose](https://github.com/crraay/habit-tracker-compose) | Production Docker Compose stack |
+
+Sibling clones: `../habit-tracker-angular`, `../habit-tracker-compose`.
 
 ## Prerequisites
 
-- Java 17 or later
-- Maven 3.6 or later
-- Spring Boot 3.3 or later
+- Java 17
+- PostgreSQL (local default: `localhost:5432/habit_tracker`)
+- Maven Wrapper in this repo (`./mvnw`, on Windows `mvnw.cmd`) — a global Maven install is not required
 
-## Installation
+## Configuration
 
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/crraay/habit-tracker-springboot.git
-   cd habit-tracker-springboot
-   ```
-2. Install dependencies:
-   ```bash
-   mvn install
-   ```
+Runtime settings: `src/main/resources/application.properties`. Do not commit real secrets.
+
+**Required** for a normal run (no defaults in properties):
+
+- `JWT_SECRET`
+- `CORS_ALLOWED_ORIGINS`
+
+**Optional** (local defaults in parentheses):
+
+- `SPRING_DATASOURCE_URL` (`jdbc:postgresql://localhost:5432/habit_tracker?currentSchema=public`)
+- `SPRING_DATASOURCE_USERNAME` (`postgres`)
+- `SPRING_DATASOURCE_PASSWORD` (`postgres`)
+- `SERVER_PORT` (`8080`)
 
 ## Development
 
-Run the application using Maven:
-
 ```bash
-mvn spring-boot:run
+git clone https://github.com/crraay/habit-tracker-springboot.git
+cd habit-tracker-springboot
+./mvnw spring-boot:run
 ```
 
-The server will start on `http://localhost:8080`.
+API: `http://localhost:8080`  
+Swagger UI: `http://localhost:8080/swagger-ui/index.html`
 
-## Build
-
-Build the project using Maven:
-
-```bash
-mvn clean package
-```
-
-The build artifacts will be stored in the `target/` directory.
-
-## Testing
-
-Run the tests using Maven:
+## Test and package
 
 ```bash
-mvn test
+./mvnw test
+./mvnw -f pom.xml package
 ```
 
-## API Documentation
+## Docker / production
 
-API documentation is available at `http://localhost:8080/swagger-ui/index.html` when the server is running.
+Production Compose, `.env`, and deploy live in [habit-tracker-compose](https://github.com/crraay/habit-tracker-compose). This repo builds and pushes the backend image — see [DOCKER.md](DOCKER.md).
+
+The Elastic Beanstalk workflow (`.github/workflows/deploy-to-elastic-beanstalk.yml`) is **legacy**. Do not use it for new deploys.
 
 ## License
 

@@ -34,7 +34,10 @@ build/
 .vscode/
 
 ### Cursor ###
-.cursor/
+.cursor/*
+!.cursor/rules/
+.cursor/rules/*
+!.cursor/rules/habit-domain.mdc
 .cursorrules
 
 ### ignore non-default application.properties ###
