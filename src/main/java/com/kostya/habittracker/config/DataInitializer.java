@@ -28,6 +28,7 @@ public class DataInitializer {
 				user.setPassword(passwordEncoder.encode("testpassword"));
                 user.setEmail("testuser@example.com");
                 user.setStatus(UserStatus.ACTIVE);
+                user.setTimezone("UTC");
 				userRepository.save(user);
 			}
 		};

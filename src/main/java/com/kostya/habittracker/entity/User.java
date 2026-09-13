@@ -46,6 +46,9 @@ public class User extends BasicAudit {
     @Column(nullable = false)
     Integer failedLoginAttempts = 0;
 
+    @Column(nullable = false, length = 64)
+    String timezone = "UTC";
+
     LocalDateTime lastLoginAt;
 
     LocalDateTime passwordChangedAt;
