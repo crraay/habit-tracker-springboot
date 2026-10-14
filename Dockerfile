@@ -4,7 +4,7 @@ WORKDIR /app
 
 COPY pom.xml .
 COPY src ./src
-RUN mvn -B -DskipTests package
+RUN mvn -B test package
 
 # Runtime: run JAR with eclipse-temurin:17-jdk
 FROM eclipse-temurin:17-jdk

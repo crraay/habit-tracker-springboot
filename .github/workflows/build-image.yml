@@ -30,8 +30,11 @@ jobs:
           java-version: "17"
           cache: maven
 
-      - name: Build backend with Maven
-        run: mvn -B -DskipTests package
+      - name: Run tests
+        run: mvn -B test
+
+      - name: Package application
+        run: mvn -B package -DskipTests
 
       - name: Log in to Docker Hub
         run: echo "${{ secrets.DOCKER_HUB_TOKEN }}" | docker login -u "${{ secrets.DOCKER_HUB_USERNAME }}" --password-stdin
